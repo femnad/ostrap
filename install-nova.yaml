@@ -1,0 +1,11 @@
+---
+- hosts: all
+  pre_tasks:
+    - apt: name={{item}} state=latest
+      become: yes
+      items:
+        - libmysqlclient-dev
+        - libpq-dev
+  tasks:
+    - git: repo=git://git.openstack.org/openstack/nova dest=~/z/gl/openstack/nova version=stable/kilo accept_hostkey=yes
+    - script: install-nova.sh

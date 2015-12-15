@@ -10,10 +10,11 @@
         - python-pip
         - python-mysqldb
         - python-setuptools
+        - rabbitmq-server        
   tasks:
-    - git: repo=git://git.openstack.org/openstack/keystone dest=~/z/gl/openstack/keystone version=juno-eol accept_hostkey=yes
     - script: add-db-admin.sh
     - script: set-hosts.sh controller
+    - git: repo=git://git.openstack.org/openstack/keystone dest=~/z/gl/openstack/keystone version=stable/kilo accept_hostkey=yes
     - script: install-keystone.sh
     - mysql_db: name=keystone state=present login_user=boot login_password=borek
     - mysql_user: name=keystone password=keystone priv=*.*:ALL state=present login_user=boot login_password=borek

@@ -1,0 +1,5 @@
+---
+- hosts: all
+  tasks:
+    - git: repo=git://git.openstack.org/openstack/glance dest=~/z/gl/openstack/glance version=stable/kilo
+    - script: install-glance.sh
