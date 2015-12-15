@@ -12,7 +12,7 @@ sudo crudini --set $config_file glance host controller
 
 sudo crudini --set $config_file keystone_authtoken
 sudo crudini --set $config_file keystone_authtoken auth_uri http://controller:5000
-sudo crudini --set $config_file keystone_authtoken auth_url = http://controller:35357
+sudo crudini --set $config_file keystone_authtoken auth_url http://controller:35357
 sudo crudini --set $config_file keystone_authtoken auth_plugin password
 sudo crudini --set $config_file keystone_authtoken project_domain_id default
 sudo crudini --set $config_file keystone_authtoken user_domain_id default
