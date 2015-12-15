@@ -6,6 +6,7 @@
       items:
         - libmysqlclient-dev
         - libpq-dev
+        - python-libvirt
   tasks:
     - git: repo=git://git.openstack.org/openstack/nova dest=~/z/gl/openstack/nova version=stable/kilo accept_hostkey=yes
     - script: install-nova.sh

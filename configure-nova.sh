@@ -4,7 +4,7 @@ config_file=/etc/nova/nova.conf
 
 sudo crudini --set $config_file DEFAULT rpc_backend rabbit
 sudo crudini --set $config_file DEFAULT auth_strategy keystone
-sudo crudini --set $config_file DEFAULT verbose True
+sudo crudini --set $config_file DEFAULT debug True
 
 sudo crudini --set $config_file database connection mysql://nova:nova@controller/nova
 
@@ -20,9 +20,11 @@ sudo crudini --set $config_file keystone_authtoken project_name service
 sudo crudini --set $config_file keystone_authtoken username nova
 sudo crudini --set $config_file keystone_authtoken password nova
 
+sudo crudini --set $config_file oslo_concurrency lock_path /var/lib/nova/tmp
+
 sudo crudini --set $config_file oslo_messaging_rabbit
 sudo crudini --set $config_file oslo_messaging_rabbit rabbit_host controller
-sudo crudini --set $config_file oslo_messaging_rabbit rabbit_userid openstack
+sudo crudini --set $config_file oslo_messaging_rabbit rabbit_userid guest
 sudo crudini --set $config_file oslo_messaging_rabbit rabbit_password guest
 
 sudo nova-manage db sync
