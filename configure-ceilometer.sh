@@ -24,3 +24,8 @@ sudo crudini --set $config_file service_credentials os_password ceilometer
 sudo crudini --set $config_file service_credentials os_endpoint_type internalURL
 sudo crudini --set $config_file service_credentials os_region_name RegionOne
 
+nova_config_file=/etc/nova/nova.conf
+sudo crudini --set $nova_config_file DEFAULT instance_usage_audit True
+sudo crudini --set $nova_config_file DEFAULT instance_usage_audit_period hour
+sudo crudini --set $nova_config_file DEFAULT notify_on_state_change vm_and_task_state
+sudo crudini --set $nova_config_file DEFAULT notification_driver messagingv2
