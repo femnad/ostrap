@@ -8,7 +8,7 @@ sudo crudini --set $config_file DEFAULT debug True
 sudo crudini --set $config_file DEFAULT auth_strategy keystone
 
 sudo crudini --set $config_file oslo_messaging_rabbit rabbit_host controller
-sudo crudini --set $config_file oslo_messaging_rabbit rabbit_userid openstack
+sudo crudini --set $config_file oslo_messaging_rabbit rabbit_userid guest
 sudo crudini --set $config_file oslo_messaging_rabbit rabbit_password guest
 
 sudo crudini --set $config_file keystone_authtoken auth_uri http://controller:5000/v2.0
