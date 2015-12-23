@@ -1,0 +1,17 @@
+---
+- hosts: all
+  tasks:
+    - apt: name={{item}} state=latest
+      become: yes
+      with_items:
+        - mongodb-server
+        - mongodb-clients
+        - python-pymongo
+        - ceilometer-api
+        - ceilometer-collecter
+        - ceilometer-agent-central
+        - ceilometer-agent-notification
+        - ceilometer-alarm-evaluator
+        - ceilometer-alarm-notifier
+        - python-ceilometerclient
+        - crudini
