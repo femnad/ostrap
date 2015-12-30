@@ -1,6 +1,6 @@
 #!/bin/bash
 neutron_config=/etc/neutron/neutron.conf
-crudini --set $neutron_config database connection mysql://neutron:NEUTRON_DBPASS@controller/neutron
+crudini --set $neutron_config database connection mysql://neutron:neutron@controller/neutron
 crudini --set $neutron_config DEFAULT rpc_backend rabbit
 crudini --set $neutron_config DEFAULT auth_strategy keystone
 crudini --set $neutron_config DEFAULT core_plugin ml2
