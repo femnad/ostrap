@@ -1,0 +1,19 @@
+---
+- hosts: all
+  pre_tasks:
+    - mysql_db: name=neutron state=present login_user=root login_password=naber
+    - mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user=root login_password=naber
+    - script: add-neutron-service.sh
+  tasks:
+    - apt: name={{item}} state=latest
+      become: yes
+      with_items:
+        - neutron-server
+        - neutron-plugin-ml2
+        - python-neutronclient
+    - script: configure-neutron.sh
+      become: yes
+    - script: configure-ml2.sh
+      become: yes
+    - command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
+      become: yes
