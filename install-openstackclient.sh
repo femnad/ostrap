@@ -1,5 +1,5 @@
 #!/bin/bash
 repo_dir="$1"
-cd $repo_dir
+cd "$1"
 pip install -r requirements.txt
-python setup.py install
+python2 setup.py install

@@ -1,5 +1,6 @@
 #!/bin/bash
-export OS_TOKEN=naber
+os_token="$1"
+export OS_TOKEN="$os_token"
 export OS_URL=http://controller:35357/v2.0
 openstack service create --name keystone --description "OpenStack Identity" identity
 openstack endpoint create --publicurl http://controller:5000/v2.0 --internalurl http://controller:5000/v2.0 --adminurl http://controller:35357/v2.0 --region RegionOne identity
