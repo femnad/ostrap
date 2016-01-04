@@ -1,5 +1,14 @@
 ---
 - hosts: all
+  vars:
+    repo_dir: /home/femnad/z/gl/openstack/glance
+    db_user: root
+    db_password: naber
+    openrc_file_location: /home/femnad/y/admin-openrc.sh
   tasks:
-    - git: repo=git://git.openstack.org/openstack/glance dest=~/z/gl/openstack/glance version=stable/kilo
-    - script: install-glance.sh
+    - git: repo=git://git.openstack.org/openstack/glance dest={{repo_dir}} version=stable/kilo
+    - script: install-glance.sh {{repo_dir}}
+      become: yes
+    - mysql_db: name=glance state=present login_user={{db_user}} login_password={{db_password}}
+    - mysql_user: name=glance password=glance priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+    - script: add-glance-services.sh {{openrc_file_location}}
