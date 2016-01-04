@@ -8,9 +8,9 @@
   pre_tasks:
     - mysql_db: name=neutron state=present login_user={{db_user}} login_password={{db_password}}
     - mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
-    # - script: add-neutron-service.sh {{openrc_file_location}}
+    - script: add-neutron-service.sh {{openrc_file_location}}
   tasks:
-    # - git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+    - git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
     - script: install-neutron.sh {{repo_dir}}
       become: yes
     - script: configure-neutron.sh
