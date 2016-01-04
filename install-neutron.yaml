@@ -1,16 +1,18 @@
 ---
 - hosts: all
+  vars:
+    - repo_dir: /home/femnad/z/gl/openstack/neutron
+    - openrc_file_location: /home/femnad/y/admin-openrc.sh
+    - db_user: root
+    - db_password: naber
   pre_tasks:
-    - mysql_db: name=neutron state=present login_user=root login_password=naber
-    - mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user=root login_password=naber
-    - script: add-neutron-service.sh
+    - mysql_db: name=neutron state=present login_user={{db_user}} login_password={{db_password}}
+    - mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+    # - script: add-neutron-service.sh {{openrc_file_location}}
   tasks:
-    - apt: name={{item}} state=latest
+    # - git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+    - script: install-neutron.sh {{repo_dir}}
       become: yes
-      with_items:
-        - neutron-server
-        - neutron-plugin-ml2
-        - python-neutronclient
     - script: configure-neutron.sh
       become: yes
     - script: configure-ml2.sh

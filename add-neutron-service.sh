@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-source ~/y/admin-openrc.sh
+source "$1"
 openstack user create --password neutron neutron
 openstack role add --project service --user neutron admin
 openstack service create --name neutron --description "OpenStack Networking" network
