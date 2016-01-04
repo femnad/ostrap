@@ -1,0 +1,15 @@
+---
+- hosts: all
+  pre_tasks:
+    - apt: name={{item}} state=latest
+      with_items:
+        - neutron-plugin-ml2
+        - neutron-plugin-openvswitch-agent
+        - neutron-l3-agent
+        - neutron-dhcp-agent
+        - neutron-metadata-agent
+      become: yes
+      when: ansible_os_family == "Debian"
+  tasks:
+    - script: configure-neutron-network-node.sh
+      become: yes
