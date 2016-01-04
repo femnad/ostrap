@@ -1,12 +1,23 @@
 ---
 - hosts: all
+  vars:
+    - repo_dir: /home/femnad/z/gl/openstack/nova
+    - openrc_file_location: /home/femnad/y/admin-openrc.sh
+    - db_user: root
+    - db_password: naber
   pre_tasks:
     - apt: name={{item}} state=latest
       become: yes
-      items:
+      with_items:
         - libmysqlclient-dev
         - libpq-dev
         - python-libvirt
   tasks:
-    - git: repo=git://git.openstack.org/openstack/nova dest=~/z/gl/openstack/nova version=stable/kilo accept_hostkey=yes
-    - script: install-nova.sh
+    - git: repo=git://git.openstack.org/openstack/nova dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+    - script: install-nova.sh {{repo_dir}}
+      become: yes
+    - mysql_db: name=nova state=present login_user={{db_user}} login_password={{db_password}}
+    - mysql_user: name=nova password=nova priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+    - script: configure-nova.sh
+      become: yes
+    - script: add-nova-service.sh {{openrc_file_location}}

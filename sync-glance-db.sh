@@ -1,2 +1,3 @@
 #!/bin/bash
-sudo glance-manage db_sync
+set -e
+glance-manage db_sync

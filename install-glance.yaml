@@ -11,4 +11,6 @@
       become: yes
     - mysql_db: name=glance state=present login_user={{db_user}} login_password={{db_password}}
     - mysql_user: name=glance password=glance priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+    - script: sync-glance-db.sh
+      become: yes
     - script: add-glance-services.sh {{openrc_file_location}}

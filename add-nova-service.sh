@@ -1,5 +1,5 @@
 #!/bin/bash
-source ~/y/admin-openrc.sh
+source "$1"
 openstack user create --password nova nova
 openstack role add --project service --user nova admin
 openstack service create --name nova --description "OpenStack Compute" compute
