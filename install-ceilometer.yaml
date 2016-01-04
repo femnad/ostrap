@@ -1,18 +1,22 @@
 ---
 - hosts: all
-  tasks:
+  vars:
+    - repo_dir: /home/femnad/z/gl/openstack/nova
+    - openrc_file_location: /home/femnad/y/admin-openrc.sh
+    - db_user: root
+    - db_password: naber
+  pre_tasks:
     - apt: name={{item}} state=latest
       become: yes
       with_items:
         - mongodb-server
         - mongodb-clients
-        - python-pymongo
-        - ceilometer-api
-        - ceilometer-collecter
-        - ceilometer-agent-central
-        - ceilometer-agent-compute
-        - ceilometer-agent-notification
-        - ceilometer-alarm-evaluator
-        - ceilometer-alarm-notifier
-        - python-ceilometerclient
-        - crudini
+      when: ansible_os_family == "Debian"
+  tasks:
+    - git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+    - script: install-ceilometer.sh {{repo_dir}}
+      become: yes
+    - mysql_db: name=ceilometer state=present login_user={{db_user}} login_password={{db_password}}
+    - mysql_user: name=ceilometer password=ceilometer priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+    - script: init-ceilometer-db.sh
+    - script: add-ceilometer-service.sh {{openrc_file_location}}

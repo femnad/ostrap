@@ -1,10 +1,6 @@
 #!/bin/bash
-mongo --host controller --eval '
-db = db.getSiblingDB("ceilometer");
-db.addUser({user: "ceilometer",
-pwd: "CEILOMETER_DBPASS",
-roles: [ "readWrite", "dbAdmin" ]})'
-source ~/y/admin-openrc.sh
+set -e
+source "$1"
 openstack user create ceilometer --password ceilometer
 openstack role add --project service --user ceilometer admin
 openstack service create --name ceilometer --description "Telemetry" metering
