@@ -5,6 +5,7 @@
     - openrc_file_location: /home/femnad/y/admin-openrc.sh
     - db_user: root
     - db_password: naber
+    - compute_driver: libvirt.LibvirtDriver
   pre_tasks:
     - apt: name={{item}} state=latest
       become: yes
@@ -18,6 +19,6 @@
       become: yes
     - mysql_db: name=nova state=present login_user={{db_user}} login_password={{db_password}}
     - mysql_user: name=nova password=nova priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
-    - script: configure-nova.sh
+    - script: configure-nova.sh {{compute_driver}}
       become: yes
     - script: add-nova-service.sh {{openrc_file_location}}
