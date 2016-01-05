@@ -18,3 +18,6 @@
       become: yes
     - command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
       become: yes
+    - script: configure-nova-neutron-network.sh
+      become: yes
+      tags: nova
