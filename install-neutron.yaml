@@ -5,6 +5,7 @@
     - openrc_file_location: /home/femnad/y/admin-openrc.sh
     - db_user: root
     - db_password: naber
+    - local_ip: 10.92.0.125
   pre_tasks:
     - mysql_db: name=neutron state=present login_user={{db_user}} login_password={{db_password}}
     - mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
@@ -13,9 +14,7 @@
     - git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
     - script: install-neutron.sh {{repo_dir}}
       become: yes
-    - script: configure-neutron.sh
-      become: yes
-    - script: configure-ml2.sh
+    - script: configure-neutron-network-node.sh {{local_ip}}
       become: yes
     - command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
       become: yes

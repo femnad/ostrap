@@ -1,5 +1,0 @@
----
-- hosts: all
-  tasks:
-    - script: configure-neutron-controller.sh
-      become: yes

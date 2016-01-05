@@ -1,11 +1,12 @@
 #!/bin/bash
 set -e
+local_ip="$1"
 ml2_config=/etc/neutron/plugins/ml2/ml2_conf.ini
 crudini --set $ml2_config ml2 type_drivers flat,vlan,gre,vxlan
 crudini --set $ml2_config ml2 tenant_network_types gre
 crudini --set $ml2_config ml2 mechanism_drivers openvswitch
 crudini --set $ml2_config ml2_type_gre tunnel_id_ranges 1:1000
-crudini --set $ml2_config ovs local_ip 10.0.0.1
+crudini --set $ml2_config ovs local_ip $local_ip
 crudini --set $ml2_config ovs bridge_mappings external:br-ex
 crudini --set $ml2_config agent tunnel_types gre
 
@@ -31,4 +32,4 @@ crudini --set $metadata_config DEFAULT project_name service
 crudini --set $metadata_config DEFAULT username neutron
 crudini --set $metadata_config DEFAULT password neutron
 crudini --set $metadata_config DEFAULT nova_metadata_ip controller
-crudini --set $metadata_config DEFAULT verbose True
+crudini --set $metadata_config DEFAULT debug True
