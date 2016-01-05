@@ -11,6 +11,8 @@
       with_items:
         - mariadb-server
         - crudini
+        - memcached
+        - python-memcache
         - python-dev
         - python-setuptools
         - rabbitmq-server
@@ -26,6 +28,6 @@
     - mysql_user: name=keystone password=keystone priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
     - script: bootstrap-keystone.sh {{keystone_repo_dir}}
       become: yes
-    - script: configure-keystone.sh
+    - script: configure-keystone.sh {{os_token}}
       become: yes
     - script: add-keystone-services.sh {{os_token}}
