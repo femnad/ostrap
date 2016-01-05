@@ -29,5 +29,3 @@ crudini --set $config_file oslo_messaging_rabbit
 crudini --set $config_file oslo_messaging_rabbit rabbit_host controller
 crudini --set $config_file oslo_messaging_rabbit rabbit_userid guest
 crudini --set $config_file oslo_messaging_rabbit rabbit_password guest
-
-nova-manage db sync
