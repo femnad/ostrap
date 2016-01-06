@@ -15,5 +15,3 @@ crudini --set $config_file token provider keystone.token.providers.uuid.Provider
 crudini --set $config_file token driver keystone.token.persistence.backends.memcache.Token
 
 crudini --set $config_file revoke driver keystone.contrib.revoke.backends.sql.Revoke
-
-keystone-manage db_sync

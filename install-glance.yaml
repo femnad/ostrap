@@ -7,10 +7,25 @@
     openrc_file_location: /home/femnad/y/admin-openrc.sh
   tasks:
     - git: repo=git://git.openstack.org/openstack/glance dest={{repo_dir}} version=stable/kilo
+      tags: install
     - script: install-glance.sh {{repo_dir}}
       become: yes
+      tags: install
+    - script: copy-glance-config.sh {{repo_dir}}
+      become: yes
+      tags: config
+    - script: configure-glance-api.sh
+      become: yes
+      tags: config
+    - script: configure-glance-registry.sh
+      tags: config
+      become: yes
     - mysql_db: name=glance state=present login_user={{db_user}} login_password={{db_password}}
+      tags: init-db
     - mysql_user: name=glance password=glance priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+      tags: init-db
     - command: glance-manage db_sync
       become: yes
+      tags: init-db
     - script: add-glance-services.sh {{openrc_file_location}}
+      tags: service
