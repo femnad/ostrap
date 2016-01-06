@@ -14,8 +14,13 @@
     - git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
     - script: install-neutron.sh {{repo_dir}}
       become: yes
+      tags: install
+    - script: copy-neutron-config.sh {{repo_dir}}
+      become: yes
+      tags: config
     - script: configure-neutron-network-node.sh {{local_ip}}
       become: yes
+      tags: config
     - command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
       become: yes
     - script: configure-nova-neutron-network.sh
