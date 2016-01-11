@@ -1,0 +1,32 @@
+---
+- hosts: all
+  vars:
+    - db_user: root
+    - db_password: naber
+    - openrc_file: /home/femnad/y/admin-openrc.sh
+    - clone_destination: /home/femnad/z/gl/openstack/cinder
+    - controller_ip: 10.92.0.125
+  pre_tasks:
+    - mysql_db: name=cinder state=present login_user={{db_user}} login_password={{db_password}}
+      tags: db-init
+    - mysql_user: name=cinder password=cinder priv=*.*:ALL state=present
+      tags: db-init
+    - script: add-cinder-services.sh {{openrc_file}}
+      tags: service
+  tasks:
+    - git: repo=http://git.openstack.org/openstack/cinder dest={{clone_destination}} version=stable/kilo
+      tags: clone
+    - script: install-cinder.sh {{clone_destination}}
+      tags: install
+      become: yes
+    - command: tox -egenconfig chdir={{clone_destination}}
+      tags: genconfig
+    - script: copy-cinder-config.sh {{clone_destination}}
+      become: yes
+      tags: copy-config
+    - script: configure-cinder.sh {{controller_ip}}
+      tags: config
+      become: yes
+    - command: cinder-manage db sync
+      become: yes
+      tags: db-sync
