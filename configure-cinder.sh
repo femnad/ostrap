@@ -2,7 +2,7 @@
 set -e
 controller_ip=$1
 cinder_config=/etc/cinder/cinder.conf
-
+mkdir -p /var/log/cinderr
 crudini --set $cinder_config database connection mysql://cinder:cinder@controller/cinder
 
 crudini --set $cinder_config DEFAULT rpc_backend rabbit
@@ -11,9 +11,10 @@ crudini --set $cinder_config DEFAULT my_ip $controller_ip
 crudini --set $cinder_config DEFAULT debug True
 crudini --set $cinder_config DEFAULT enabled_backends nfs
 crudini --set $cinder_config DEFAULT glance_host controller
+crudini --set $cinder_config DEFAULT log_dir /var/log/cinder
 
 crudini --set $cinder_config oslo_messaging_rabbit rabbit_host controller
-crudini --set $cinder_config oslo_messaging_rabbit rabbit_userid openstack
+crudini --set $cinder_config oslo_messaging_rabbit rabbit_userid rabbit
 crudini --set $cinder_config oslo_messaging_rabbit rabbit_password guest
 
 crudini --set $cinder_config keystone_authtoken auth_uri http://controller:5000
