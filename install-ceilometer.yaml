@@ -14,9 +14,18 @@
       when: ansible_os_family == "Debian"
   tasks:
     - git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
-    - script: install-ceilometer.sh {{repo_dir}}
+      tags: clone
+    - name: Install ceilometer
+      script: install-ceilometer.sh {{repo_dir}}
       become: yes
+      tags: install
     - mysql_db: name=ceilometer state=present login_user={{db_user}} login_password={{db_password}}
+      tags: db-init
     - mysql_user: name=ceilometer password=ceilometer priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
-    - script: init-ceilometer-db.sh
-    - script: add-ceilometer-service.sh {{openrc_file_location}}
+      tags: db-init
+    - name: Initialize MongoDB
+      script: init-ceilometer-db.sh
+      tags: db-init
+    - name: Add services
+      script: add-ceilometer-service.sh {{openrc_file_location}}
+      tags: services
