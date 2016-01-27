@@ -26,4 +26,5 @@
       tags: init_db
     - script: configure-nova.sh {{compute_driver}}
       become: yes
+      tags: config
     - script: add-nova-service.sh {{openrc_file_location}}
