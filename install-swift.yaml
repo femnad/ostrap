@@ -1,0 +1,66 @@
+---
+- hosts: all
+  vars:
+    - openrc_file: /home/femnad/y/admin-openrc.sh
+    - disks: [xvdf, xvdg]
+    - ip_address: 172.31.18.81
+    - clone_destination: /home/femnad/z/gl/openstack/swift
+    - public_url: controller
+  pre_tasks:
+    - name: Install required packages with apt
+      apt: name={{item}} state=latest
+      with_items:
+        - memcached
+        - rsync
+        - xfsprogs
+      when: ansible_os_family == "Debian"
+      tags: packages
+      become: yes
+  tasks:
+      - name: Add swift services
+        script: add-swift-services.sh {{openrc_file}}
+        tags: service
+      - name: Clone swift
+        git: repo=git://git.openstack.org/openstack/swift dest={{clone_destination}} version=stable/kilo
+        tags: clone
+      - name: Install swift
+        script: install-swift.sh {{clone_destination}}
+        become: yes
+        tags: install
+      - name: Prepare disks
+        script: prepare-swift-disk.sh {{item}}
+        with_items:
+          - "{{disks}}"
+        tags: disks
+        become: yes
+      - name: Add swift configuration files
+        script: add-swift-config-files.sh
+        tags: storage-config
+        become: yes
+      - name: Configure rsync
+        script: configure-rsync.sh {{ip_address}}
+        become:  yes
+        tags: rsync
+      - name: Start rsync service
+        service: name=rsync state=started
+        become: yes
+        tags: rsync
+      - name: Create account ring
+        script: build-swift-rings.sh account {{ip_address}} {{item}}
+        with_items:
+          - "{{disks}}"
+        tags: account-ring
+      - name: Create container ring
+        script: build-swift-rings.sh container {{ip_address}} {{item}}
+        with_items:
+          - "{{disks}}"
+        tags: container-ring
+      - name: Create object ring
+        script: build-swift-rings.sh object {{ip_address}} {{item}}
+        with_items:
+          - "{{disks}}"
+        tags: object-ring
+      - name: Add swift configuration
+        script: configure-swift.sh
+        become: yes
+        tags: config
