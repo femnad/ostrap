@@ -6,7 +6,8 @@
     keystone_repo_dir: /home/femnad/z/gl/openstack/keystone
     os_token: naber
   pre_tasks:
-    - apt: name={{item}} state=latest
+    - name: Install requirements with apt
+      apt: name={{item}} state=latest
       become: yes
       with_items:
         - mariadb-server
@@ -19,8 +20,9 @@
       when: ansible_os_family == "Debian"
       tags: packages
   tasks:
-    - script: add-db-admin.sh
-      tags: db-init
+    - name: Add database admin
+      script: add-db-admin.sh
+      tags: db-admin-init
     - script: set-hosts.sh controller
       become: yes
       tags: host-init
@@ -29,18 +31,24 @@
     - script: install-keystone.sh {{keystone_repo_dir}}
       become: yes
       tags: install
-    - mysql_db: name=keystone state=present login_user={{db_user}} login_password={{db_password}}
+    - name: Add keystone database
+      mysql_db: name=keystone state=present login_user={{db_user}} login_password={{db_password}}
       tags: db-init
-    - mysql_user: name=keystone password=keystone priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+    - name: Add keystone database user
+      mysql_user: name=keystone password=keystone priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
       tags: db-init
-    - script: bootstrap-keystone.sh {{keystone_repo_dir}}
+    - name: Generate configuration
+      script: bootstrap-keystone.sh {{keystone_repo_dir}}
+      become: yes
+      tags: genconfig
+    - name: Configure keystone
+      script: configure-keystone.sh {{os_token}}
       become: yes
       tags: config
-    - script: configure-keystone.sh {{os_token}}
+    - name: Sync keystone database
+      command: keystone-manage db_sync
       become: yes
-      tags: config
-    - command: keystone-manage db_sync
-      become: yes
-      tags: db-init
-    - script: add-keystone-services.sh {{os_token}}
+      tags: sync-db
+    - name: Add keystone services
+      script: add-keystone-services.sh {{os_token}}
       tags: service
