@@ -1,8 +1,8 @@
 ---
 - hosts: all
   vars:
-    - repo_dir: /home/femnad/z/gl/openstack/nova
-    - openrc_file_location: /home/femnad/y/admin-openrc.sh
+    - repo_dir: /home/femnad/z/gl/openstack/ceilometer
+    - openrc_file_location: /home/femnad/y/os-openrc/francium-admin.sh
     - db_user: root
     - db_password: naber
   pre_tasks:
@@ -29,3 +29,11 @@
     - name: Add services
       script: add-ceilometer-service.sh {{openrc_file_location}}
       tags: services
+    - name: Copy configuration
+      script: copy-ceilometer-config.sh {{repo_dir}}
+      become: yes
+      tags: genconfig
+    - name: Configure ceilometer
+      script: configure-ceilometer.sh
+      become: yes
+      tags: config
