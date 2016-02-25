@@ -17,12 +17,10 @@
       tags: install
     - script: copy-neutron-config.sh {{repo_dir}}
       become: yes
-      tags: config
+      tags: genconfig
     - script: configure-neutron-network-node.sh {{local_ip}}
       become: yes
       tags: config
     - command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
       become: yes
-    - script: configure-nova-neutron-network.sh
-      become: yes
-      tags: nova
+      tags: migrate

@@ -13,7 +13,7 @@
       tags: install
     - script: copy-glance-config.sh {{repo_dir}}
       become: yes
-      tags: config
+      tags: genconfig
     - script: configure-glance-api.sh
       become: yes
       tags: config
