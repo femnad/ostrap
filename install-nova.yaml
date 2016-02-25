@@ -15,8 +15,10 @@
         - python-libvirt
   tasks:
     - git: repo=git://git.openstack.org/openstack/nova dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
-    - script: install-nova.sh {{repo_dir}}
+    - name: Installing nova
+      script: install-nova.sh {{repo_dir}}
       become: yes
+      tags: install
     - mysql_db: name=nova state=present login_user={{db_user}} login_password={{db_password}}
       tags: init_db
     - mysql_user: name=nova password=nova priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
