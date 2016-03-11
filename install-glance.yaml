@@ -1,15 +1,13 @@
 ---
 - hosts: all
+  vars_files:
+    - path_vars.yaml
   vars:
-    repo_dir: /home/femnad/z/gl/openstack/glance
-    db_user: root
-    db_password: naber
-    openrc_file_location: /home/femnad/y/admin-openrc.sh
+    repo_dir: "{{base_clone_path}}/glance"
   tasks:
     - git: repo=git://git.openstack.org/openstack/glance dest={{repo_dir}} version=stable/kilo
-      tags: install
-    - script: install-glance.sh {{repo_dir}}
-      become: yes
+      tags: clone
+    - script: install-glance.sh {{repo_dir}} {{virtualenv_path}}
       tags: install
     - script: copy-glance-config.sh {{repo_dir}}
       become: yes
@@ -20,12 +18,17 @@
     - script: configure-glance-registry.sh
       tags: config
       become: yes
-    - mysql_db: name=glance state=present login_user={{db_user}} login_password={{db_password}}
+    - mysql_db: name=glance state=present login_user={{db_user}} login_password={{db_password}} encoding=utf8
       tags: init-db
     - mysql_user: name=glance password=glance priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
       tags: init-db
-    - command: glance-manage db_sync
+    - name: Create log dirs
+      file: path=/var/log/glance state=directory
+      tags: sync-db
       become: yes
-      tags: init-db
-    - script: add-glance-services.sh {{openrc_file_location}}
+    - name: Synchronize Glance database
+      command: "{{virtualenv_path}}/bin/python {{virtualenv_path}}/bin/glance-manage db_sync"
+      become: yes
+      tags: sync-db
+    - script: add-glance-service.sh {{admin_openrc_file}} {{virtualenv_path}}/bin/activate
       tags: service
