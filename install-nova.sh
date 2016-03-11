@@ -1,10 +1,10 @@
 #!/bin/bash
+set -e
 repo_dir="$1"
+virtualenv="$2"
+
 cd "$repo_dir"
+source "$virtualenv/bin/activate"
 python2 setup.py install
 pip2 install -r requirements.txt
 pip2 install -r test-requirements.txt
-./tools/config/generate_sample.sh
-mkdir -p /etc/nova
-cp etc/nova/nova.conf.sample /etc/nova/nova.conf
-cp etc/nova/{api-paste.ini,policy.json} /etc/nova/

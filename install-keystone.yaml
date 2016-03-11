@@ -3,10 +3,9 @@
     - path_vars.yaml
   hosts: all
   vars:
-    db_user: osdb
-    db_password: toor
     keystone_repo_dir: "{{base_clone_path}}/keystone"
     os_token: nekot
+    admin_password: nimda
   pre_tasks:
     - name: Install requirements with apt
       apt: name={{item}} state=latest
@@ -39,9 +38,12 @@
     - name: Install keystone
       script: install-keystone.sh {{keystone_repo_dir}} {{virtualenv_path}}
       tags: install
-    - name: Install MySQL driver
-      pip: name=MySQL-python virtualenv={{virtualenv_path}}
-      tags: install
+    - name: Install required Python packages
+      pip: name={{item}} virtualenv={{virtualenv_path}}
+      with_items:
+        - MySQL-python virtualenv
+        - python-memcached
+      tags: install-pip
     - name: Add keystone database
       mysql_db: name=keystone state=present login_user={{db_user}} login_password={{db_password}}
       tags: db-init
@@ -61,5 +63,8 @@
       become: yes
       tags: sync-db
     - name: Add keystone services
-      script: add-keystone-services.sh {{os_token}} {{virtualenv_path}}
+      script: add-keystone-services.sh {{os_token}} {{virtualenv_path}} {{admin_password}}
       tags: service
+    - name: Add admin openrc file
+      script: add-admin-openrc-file.sh {{openrc_dir}} {{admin_openrc_file}} {{admin_password}}
+      tags: openrc

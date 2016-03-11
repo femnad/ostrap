@@ -1,5 +1,11 @@
 #!/bin/bash
-source "$1"
+set -e
+openrc_file="$1"
+virtualenv="$2"
+
+source "$virtualenv/bin/activate"
+source "$openrc_file"
+
 openstack user create --password nova nova
 openstack role add --project service --user nova admin
 openstack service create --name nova --description "OpenStack Compute" compute

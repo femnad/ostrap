@@ -1,32 +1,46 @@
 ---
 - hosts: all
+  vars_files:
+    - path_vars.yaml
   vars:
-    - repo_dir: /home/femnad/z/gl/openstack/nova
-    - openrc_file_location: /home/femnad/y/admin-openrc.sh
-    - db_user: root
-    - db_password: naber
+    - repo_dir: "{{base_clone_path}}/nova"
     - compute_driver: libvirt.LibvirtDriver
   pre_tasks:
-    - apt: name={{item}} state=latest
+    - name: Install requirements with apt
+      apt: name={{item}} state=latest
       become: yes
       with_items:
+        - crudini
+        - libffi-dev
         - libmysqlclient-dev
         - libpq-dev
-        - python-libvirt
+        - libxml2-dev
+        - libxslt1-dev
+        - python-dev
+      tags: reqs
   tasks:
     - git: repo=git://git.openstack.org/openstack/nova dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
-    - name: Installing nova
-      script: install-nova.sh {{repo_dir}}
-      become: yes
+      tags: clone
+    - name: Install nova
+      script: install-nova.sh {{repo_dir}} {{virtualenv_path}}
       tags: install
+    - name: Generate configuration path
+      file: path=/etc/nova state=directory
+      tags: genconfig
+      become: yes
+    - name: Generate configuration
+      script: generate-nova-config.sh {{repo_dir}} {{virtualenv_path}}
+      become: yes
+      tags: genconfig
     - mysql_db: name=nova state=present login_user={{db_user}} login_password={{db_password}}
       tags: init_db
     - mysql_user: name=nova password=nova priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
       tags: init_db
-    - command: nova-manage db sync
+    - command: "{{virtualenv_path/bin/nova-manage}} db sync"
       become: yes
       tags: init_db
     - script: configure-nova.sh {{compute_driver}}
       become: yes
       tags: config
-    - script: add-nova-service.sh {{openrc_file_location}}
+    - script: add-nova-service.sh {{admin_openrc_file}} {{virtualenv_path}}
+      tags: service
