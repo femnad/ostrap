@@ -1,5 +1,9 @@
 #!/bin/bash
+set -e
+
 os_token="$1"
+virtualenv="$2"
+source "$virtualenv/bin/activate"
 export OS_TOKEN="$os_token"
 export OS_URL=http://controller:35357/v2.0
 openstack service create --name keystone --description "OpenStack Identity" identity

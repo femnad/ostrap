@@ -1,35 +1,46 @@
 ---
-- hosts: all
+- vars_files:
+    - path_vars.yaml
+  hosts: all
   vars:
-    db_user: root
-    db_password: naber
-    keystone_repo_dir: /home/femnad/z/gl/openstack/keystone
-    os_token: naber
+    db_user: osdb
+    db_password: toor
+    keystone_repo_dir: "{{base_clone_path}}/keystone"
+    os_token: nekot
   pre_tasks:
     - name: Install requirements with apt
       apt: name={{item}} state=latest
       become: yes
       with_items:
-        - mariadb-server
         - crudini
+        - git
+        - mariadb-server
         - memcached
-        - python-memcache
+        - libffi-dev
+        - libssl-dev
+        - libmariadbclient-dev
         - python-dev
-        - python-setuptools
+        - python-virtualenv
         - rabbitmq-server
       when: ansible_os_family == "Debian"
-      tags: packages
+      tags: reqs
   tasks:
     - name: Add database admin
-      script: add-db-admin.sh
+      script: add-db-admin.sh {{db_user}} {{db_password}}
       tags: db-admin-init
-    - script: set-hosts.sh controller
+      become: yes
+    - name: set hostname
+      script: set-hosts.sh controller
       become: yes
       tags: host-init
-    - git: repo=git://git.openstack.org/openstack/keystone dest={{keystone_repo_dir}} version=stable/kilo accept_hostkey=yes
+    - name: Clone keystone repo
+      git: repo=git://git.openstack.org/openstack/keystone dest={{keystone_repo_dir}} version=stable/kilo accept_hostkey=yes
+      tags: clone
+    - name: Install keystone
+      script: install-keystone.sh {{keystone_repo_dir}} {{virtualenv_path}}
       tags: install
-    - script: install-keystone.sh {{keystone_repo_dir}}
-      become: yes
+    - name: Install MySQL driver
+      pip: name=MySQL-python virtualenv={{virtualenv_path}}
       tags: install
     - name: Add keystone database
       mysql_db: name=keystone state=present login_user={{db_user}} login_password={{db_password}}
@@ -46,9 +57,9 @@
       become: yes
       tags: config
     - name: Sync keystone database
-      command: keystone-manage db_sync
+      command: "{{virtualenv_path}}/bin/python {{virtualenv_path}}/bin/keystone-manage db_sync"
       become: yes
       tags: sync-db
     - name: Add keystone services
-      script: add-keystone-services.sh {{os_token}}
+      script: add-keystone-services.sh {{os_token}} {{virtualenv_path}}
       tags: service

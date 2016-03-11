@@ -1,8 +1,9 @@
 ---
 - hosts: all
+  vars_files:
+    - path_vars.yaml
   vars:
-    repo_dir: /home/femnad/z/gl/openstack/python-openstackclient
+    repo_dir: "{{base_clone_path}}/python-openstackclient"
   tasks:
     - git: repo=git://git.openstack.org/openstack/python-openstackclient dest={{repo_dir}} version=1.0.4 accept_hostkey=yes
-    - script: install-openstackclient.sh {{repo_dir}}
-      become: yes
+    - script: install-openstackclient.sh {{repo_dir}} {{virtualenv_path}}
