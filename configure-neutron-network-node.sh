@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-local_ip="$1"
+local_ip=$(ip r | grep default | egrep -o '([0-9]{1,3}\.){3}[0-9]{1,3}')
 
 neutron_config=/etc/neutron/neutron.conf
 crudini --set $neutron_config database connection mysql://neutron:neutron@controller/neutron

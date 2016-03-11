@@ -1,26 +1,41 @@
 ---
 - hosts: all
+  vars_files:
+    - path_vars.yaml
+    - credential-params.yaml
   vars:
-    - repo_dir: /home/femnad/z/gl/openstack/neutron
-    - openrc_file_location: /home/femnad/y/admin-openrc.sh
-    - db_user: root
-    - db_password: naber
-    - local_ip: 10.92.0.125
+    - repo_dir: "{{base_clone_path}}/neutron"
   pre_tasks:
-    - mysql_db: name=neutron state=present login_user={{db_user}} login_password={{db_password}}
-    - mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
-    - script: add-neutron-service.sh {{openrc_file_location}}
-  tasks:
-    - git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
-    - script: install-neutron.sh {{repo_dir}}
+    - name: Install requirements with apt
+      apt: name={{item}} state=installed
+      with_items:
+        - openvswitch-switch
+      tags: reqs
       become: yes
+    - name: Create database
+      mysql_db: name=neutron state=present login_user={{db_user}} login_password={{db_password}}
+      tags: db-init
+    - name: Create database user
+      mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+      tags: db-init
+  tasks:
+    - name: Clone neutron repository
+      git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+      tags: clone
+    - name: Install Neutron
+      script: install-neutron.sh {{repo_dir}} {{virtualenv_activator}}
       tags: install
-    - script: copy-neutron-config.sh {{repo_dir}}
+    - name: Generate Neutron configuration
+      script: copy-neutron-config.sh {{repo_dir}}
       become: yes
       tags: genconfig
-    - script: configure-neutron-network-node.sh {{local_ip}}
+    - name: Configure Neutron
+      script: configure-neutron-network-node.sh {{local_ip}}
       become: yes
       tags: config
-    - command: neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head
-      become: yes
-      tags: migrate
+    - name: Synchronize database
+      command: "{{virtualenv_python}} {{virtualenv_bin}}/neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head"
+      tags: db-sync
+    - name: Add neutron services
+      script: add-neutron-service.sh {{admin_openrc_file}} {{virtualenv_activator}}
+      tags: service

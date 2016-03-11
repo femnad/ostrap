@@ -1,6 +1,11 @@
 #!/bin/bash
 set -e
-source "$1"
+openrc_file="$1"
+virtualenv="$2"
+
+source $openrc_file
+source $virtualenv
+
 openstack user create --password neutron neutron
 openstack role add --project service --user neutron admin
 openstack service create --name neutron --description "OpenStack Networking" network
