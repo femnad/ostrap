@@ -39,3 +39,9 @@
     - name: Add neutron services
       script: add-neutron-service.sh {{admin_openrc_file}} {{virtualenv_activator}}
       tags: service
+    - name: Create neutron log directory
+      file: name=/var/log/neutron state=directory
+    - name: Edit sysctl file
+      script: edit-sysctl.sh
+      become: yes
+      tags: sysctl

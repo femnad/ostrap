@@ -15,9 +15,13 @@
         - libffi-dev
         - libmysqlclient-dev
         - libpq-dev
+        - libvirt-bin
+        - libvirt-dev
         - libxml2-dev
         - libxslt1-dev
+        - pkg-config
         - python-dev
+        - qemu-kvm
       tags: reqs
   tasks:
     - git: repo=git://git.openstack.org/openstack/nova dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
@@ -33,15 +37,26 @@
       script: generate-nova-config.sh {{repo_dir}} {{virtualenv_path}}
       become: yes
       tags: genconfig
-    - mysql_db: name=nova state=present login_user={{db_user}} login_password={{db_password}}
+    - name: Add Nova database
+      mysql_db: name=nova state=present login_user={{db_user}} login_password={{db_password}}
       tags: init_db
-    - mysql_user: name=nova password=nova priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+    - name: Add Nova database user
+      mysql_user: name=nova password=nova priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
       tags: init_db
-    - command: "{{virtualenv_path/bin/nova-manage}} db sync"
+    - name: Synchronize Nova database
+      command: "{{virtualenv_bin}}/nova-manage db sync"
       become: yes
       tags: init_db
-    - script: configure-nova.sh {{compute_driver}}
+    - name: Configure Nova
+      script: configure-nova.sh {{compute_driver}}
       become: yes
       tags: config
-    - script: add-nova-service.sh {{admin_openrc_file}} {{virtualenv_path}}
+    - name: Add Nova services
+      script: add-nova-service.sh {{admin_openrc_file}} {{virtualenv_path}}
       tags: service
+    - name: Add instances state directory
+      file: path=/var/lib/nova/instances state=path
+    - name: Configure Nova to use Neutron networking
+      script: configure-nova-neutron-network.sh
+      become: yes
+      tags: network
