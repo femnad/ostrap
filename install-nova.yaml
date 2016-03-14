@@ -19,6 +19,7 @@
         - libvirt-dev
         - libxml2-dev
         - libxslt1-dev
+        - nbd_client
         - pkg-config
         - python-dev
         - qemu-kvm

@@ -8,6 +8,7 @@ crudini --set $config_file DEFAULT rpc_backend rabbit
 crudini --set $config_file DEFAULT auth_strategy keystone
 crudini --set $config_file DEFAULT debug True
 crudini --set $config_file DEFAULT state_path /var/lib/nova
+crudini --set $config_file DEFAULT log_dir /var/log/nova
 
 crudini --set $config_file database connection mysql://nova:nova@controller/nova
 
