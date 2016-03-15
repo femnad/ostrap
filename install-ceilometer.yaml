@@ -1,23 +1,24 @@
 ---
 - hosts: all
+  vars_files:
+    - path_vars.yaml
+    - credential-params.yaml
   vars:
-    - repo_dir: /home/femnad/z/gl/openstack/ceilometer
-    - openrc_file_location: /home/femnad/y/os-openrc/francium-admin.sh
-    - db_user: root
-    - db_password: naber
+    - repo_dir: "{{base_clone_path}}/ceilometer"
   pre_tasks:
-    - apt: name={{item}} state=latest
+    - name: Install requirements with apt
+      apt: name={{item}} state=latest
       become: yes
       with_items:
         - mongodb-server
         - mongodb-clients
       when: ansible_os_family == "Debian"
+      tags: reqs
   tasks:
     - git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
       tags: clone
     - name: Install ceilometer
-      script: install-ceilometer.sh {{repo_dir}}
-      become: yes
+      script: install-ceilometer.sh {{repo_dir}} {{virtualenv_activator}}
       tags: install
     - mysql_db: name=ceilometer state=present login_user={{db_user}} login_password={{db_password}}
       tags: db-init
@@ -27,10 +28,10 @@
       script: init-ceilometer-db.sh
       tags: db-init
     - name: Add services
-      script: add-ceilometer-service.sh {{openrc_file_location}}
+      script: add-ceilometer-service.sh {{admin_openrc_file}} {{virtualenv_activator}}
       tags: services
-    - name: Copy configuration
-      script: copy-ceilometer-config.sh {{repo_dir}}
+    - name: Generate Ceilometer configuration
+      script: ceilometer-genconfig.sh {{repo_dir}}
       become: yes
       tags: genconfig
     - name: Configure ceilometer
