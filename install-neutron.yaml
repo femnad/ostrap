@@ -30,7 +30,11 @@
       become: yes
       tags: genconfig
     - name: Configure Neutron
-      script: configure-neutron-network-node.sh {{local_ip}}
+      script: configure-neutron-network-node.sh
+      become: yes
+      tags: config
+    - name: Create log dir
+      file: name=/var/log/neutron state=directory
       become: yes
       tags: config
     - name: Synchronize database
