@@ -6,6 +6,7 @@ crudini --set $config_file database connection mongodb://ceilometer:ceilometer@c
 crudini --set $config_file DEFAULT rpc_backend rabbit
 crudini --set $config_file DEFAULT debug True
 crudini --set $config_file DEFAULT auth_strategy keystone
+crudini --set $config_file DEFAULT log_dir /var/log/ceilometer
 
 crudini --set $config_file oslo_messaging_rabbit rabbit_host controller
 crudini --set $config_file oslo_messaging_rabbit rabbit_userid guest

@@ -26,7 +26,7 @@
       tags: db-init
     - name: Initialize MongoDB
       script: init-ceilometer-db.sh
-      tags: db-init
+      tags: mongodb-init
     - name: Add services
       script: add-ceilometer-service.sh {{admin_openrc_file}} {{virtualenv_activator}}
       tags: services
@@ -38,3 +38,5 @@
       script: configure-ceilometer.sh
       become: yes
       tags: config
+    - name: Create log dir
+      file: path=/var/log/ceilometer state=directory

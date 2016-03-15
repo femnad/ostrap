@@ -7,5 +7,8 @@ source $virtualenv
 cd $repo_dir
 pip2 install -r requirements.txt
 python2 setup.py install
+
 pip install tox
 tox -egenconfig
+
+pip install pymongo
