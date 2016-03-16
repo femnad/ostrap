@@ -15,7 +15,8 @@
       when: ansible_os_family == "Debian"
       tags: reqs
   tasks:
-    - git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+    - name: Clone ceilometer repository
+      git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
       tags: clone
     - name: Install ceilometer
       script: install-ceilometer.sh {{repo_dir}} {{virtualenv_activator}}
@@ -40,3 +41,5 @@
       tags: config
     - name: Create log dir
       file: path=/var/log/ceilometer state=directory
+      become: yes
+      tags: config
