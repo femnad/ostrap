@@ -18,6 +18,8 @@ crudini --set $config_file keystone_authtoken admin_tenant_name service
 crudini --set $config_file keystone_authtoken admin_user ceilometer
 crudini --set $config_file keystone_authtoken admin_password ceilometer
 
+crudini --set $config_file notification store_events true
+
 crudini --set $config_file service_credentials os_auth_url http://controller:5000/v2.0
 crudini --set $config_file service_credentials os_username ceilometer
 crudini --set $config_file service_credentials os_tenant_name service
