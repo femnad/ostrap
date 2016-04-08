@@ -64,7 +64,7 @@
     - name: Sync keystone database
       command: "{{virtualenv_path}}/bin/python {{virtualenv_path}}/bin/keystone-manage db_sync"
       become: yes
-      tags: sync-db
+      tags: db-sync
     - name: Add keystone services
       script: add-keystone-services.sh {{os_token}} {{virtualenv_path}} {{admin_password}}
       tags: service
