@@ -30,7 +30,7 @@
            version={{version_branch}} accept_hostkey=yes
       tags: clone
     - name: Install nova
-      script: install-nova.sh {{repo_dir}} {{virtualenv_path}}
+      script: install-component.sh {{repo_dir}} {{virtualenv_path}}
       tags: install
     - name: Generate configuration path
       file: path=/etc/nova state=directory

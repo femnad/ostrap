@@ -1,8 +1,0 @@
----
-version_branch: stable/liberty
-version_release: liberty
-virtualenv_path: "{{ base_virtualenv_path }}/{{ version_release }}"
-virtualenv_bin: "{{ virtualenv_path }}/bin"
-virtualenv_activator: "{{ virtualenv_bin }}/activate"
-virtualenv_python: "{{ virtualenv_bin }}/python"
-nova_database: "liberty_nova"

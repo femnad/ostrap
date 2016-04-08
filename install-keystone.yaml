@@ -1,12 +1,11 @@
 ---
 - vars_files:
+    - environment.yaml
     - path_vars.yaml
     - credential-params.yaml
   hosts: all
   vars:
-    keystone_repo_dir: "{{base_clone_path}}/keystone"
-    os_token: nekot
-    admin_password: nimda
+    keystone_repo_dir: "{{base_clone_path}}/{{version_release}}/keystone"
   pre_tasks:
     - name: Install requirements with apt
       apt: name={{item}} state=latest
@@ -34,10 +33,11 @@
       become: yes
       tags: host-init
     - name: Clone keystone repo
-      git: repo=git://git.openstack.org/openstack/keystone dest={{keystone_repo_dir}} version=stable/kilo accept_hostkey=yes
+      git: repo=git://git.openstack.org/openstack/keystone dest={{keystone_repo_dir}}
+           version={{version_branch}} accept_hostkey=yes
       tags: clone
     - name: Install keystone
-      script: install-keystone.sh {{keystone_repo_dir}} {{virtualenv_path}}
+      script: install-component.sh {{keystone_repo_dir}} {{virtualenv_path}}
       tags: install
     - name: Install required Python packages
       pip: name={{item}} virtualenv={{virtualenv_path}}
@@ -46,10 +46,12 @@
         - python-memcached
       tags: install-pip
     - name: Add keystone database
-      mysql_db: name=keystone state=present login_user={{db_user}} login_password={{db_password}}
+      mysql_db: name={{keystone_database}} state=present
+                login_user={{db_user}} login_password={{db_password}}
       tags: db-init
     - name: Add keystone database user
-      mysql_user: name=keystone password=keystone priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+      mysql_user: name=keystone password=keystone priv=*.*:ALL state=present
+                  login_user={{db_user}} login_password={{db_password}}
       tags: db-init
     - name: Generate configuration
       script: bootstrap-keystone.sh {{keystone_repo_dir}}

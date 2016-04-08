@@ -3,8 +3,12 @@ set -e
 
 repo_dir="$1"
 virtualenv="$2"
-virtualenv $virtualenv
+if [[ ! -d $virtualenv ]]
+then
+    virtualenv $virtualenv
+fi
 source "$virtualenv/bin/activate"
 cd $repo_dir
-python setup.py install
-pip install -r requirements.txt
+python2 setup.py install
+pip2 install --upgrade pip
+pip2 install -r requirements.txt
