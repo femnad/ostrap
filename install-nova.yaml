@@ -3,8 +3,9 @@
   vars_files:
     - path_vars.yaml
     - credential-params.yaml
+    - settings.yaml
   vars:
-    - repo_dir: "{{base_clone_path}}/nova"
+    - repo_dir: "{{base_clone_path}}/{{version_release}}/nova"
     - compute_driver: libvirt.LibvirtDriver
   pre_tasks:
     - name: Install requirements with apt
@@ -25,7 +26,8 @@
         - qemu-kvm
       tags: reqs
   tasks:
-    - git: repo=git://git.openstack.org/openstack/nova dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+    - git: repo=git://git.openstack.org/openstack/nova dest={{repo_dir}}
+           version={{version_branch}} accept_hostkey=yes
       tags: clone
     - name: Install nova
       script: install-nova.sh {{repo_dir}} {{virtualenv_path}}
@@ -38,11 +40,14 @@
       script: generate-nova-config.sh {{repo_dir}} {{virtualenv_path}}
       become: yes
       tags: genconfig
+      when: version_release == "kilo"
     - name: Add Nova database
-      mysql_db: name=nova state=present login_user={{db_user}} login_password={{db_password}}
+      mysql_db: name={{nova_database}} state=present
+                login_user={{db_user}} login_password={{db_password}}
       tags: init_db
     - name: Add Nova database user
-      mysql_user: name=nova password=nova priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+      mysql_user: name=nova password=nova priv=*.*:ALL state=present
+                  login_user={{db_user}} login_password={{db_password}}
       tags: init_db
     - name: Synchronize Nova database
       command: "{{virtualenv_bin}}/nova-manage db sync"

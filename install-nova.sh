@@ -10,6 +10,7 @@ fi
 cd "$repo_dir"
 source "$virtualenv/bin/activate"
 python2 setup.py install
+pip2 install --upgrade pip
 pip2 install -r requirements.txt
 pip2 install -r test-requirements.txt
-pip install libvirt-python
+pip2 install libvirt-python
