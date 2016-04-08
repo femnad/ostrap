@@ -1,9 +1,9 @@
 ---
 - hosts: all
   vars_files:
+    - environment.yaml
     - path_vars.yaml
     - credential-params.yaml
-    - settings.yaml
   vars:
     - repo_dir: "{{base_clone_path}}/{{version_release}}/nova"
     - compute_driver: libvirt.LibvirtDriver

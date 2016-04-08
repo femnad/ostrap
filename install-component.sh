@@ -10,6 +10,6 @@ then
 fi
 
 cd "$repo_path"
-source "$virtualenv_activator/bin/activate"
+source "$virtualenv_name/bin/activate"
 python setup.py install
 pip install -r requirements.txt
