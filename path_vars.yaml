@@ -1,6 +1,6 @@
 ---
 local_user_home: "{{ ansible_env.HOME }}"
-base_clone_path: "{{ local_user_home }}/z/gl/openstack"
+base_clone_path: "{{ local_user_home }}/{{clone_path_prefix}}/openstack/{{version_release}}"
 base_virtualenv_path: "{{ local_user_home }}/y/virtualenvs/osvenv"
 openrc_dir: "{{ local_user_home }}/y/os-openrc"
 admin_openrc_file: "{{ openrc_dir }}/admin-openrc.sh"

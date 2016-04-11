@@ -1,10 +1,13 @@
 ---
 - hosts: all
   vars_files:
+    - environment.yaml
     - path_vars.yaml
     - credential-params.yaml
   vars:
     - repo_dir: "{{base_clone_path}}/neutron"
+    - config_template_base: "/tmp/neutron_config_"
+    - l3_config_template: "{{config_template_base}}l3_agent"
   pre_tasks:
     - name: Install requirements with apt
       apt: name={{item}} state=installed
@@ -12,18 +15,24 @@
         - openvswitch-switch
       tags: reqs
       become: yes
+    - name: Install MySQL-Python
+      pip: name=MySql-python virtualenv={{virtualenv_path}}
+      tags: db-sync
     - name: Create database
-      mysql_db: name=neutron state=present login_user={{db_user}} login_password={{db_password}}
+      mysql_db: name={{neutron_database}} state=present
+                login_user={{db_user}} login_password={{db_password}}
       tags: db-init
     - name: Create database user
-      mysql_user: name=neutron password=neutron priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
+      mysql_user: name=neutron password=neutron priv=*.*:ALL state=present
+                  login_user={{db_user}} login_password={{db_password}}
       tags: db-init
   tasks:
     - name: Clone neutron repository
-      git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+      git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}}
+           version={{version_branch}} accept_hostkey=yes
       tags: clone
     - name: Install Neutron
-      script: install-neutron.sh {{repo_dir}} {{virtualenv_activator}}
+      script: install-component.sh {{repo_dir}} {{virtualenv_path}}
       tags: install
     - name: Generate Neutron configuration
       script: copy-neutron-config.sh {{repo_dir}}
@@ -33,6 +42,13 @@
       script: configure-neutron-network-node.sh
       become: yes
       tags: config
+    - name: Prepare Neutron L3 agent configuration template
+      template: src=neutron-l3-config.j2 dest={{l3_config_template}}
+      tags: config-l3
+    - name: Configure Neutron L3 agent
+      shell: crudini --merge /etc/neutron/l3_agent.ini < {{l3_config_template}}
+      become: yes
+      tags: config-l3
     - name: Create log dir
       file: name=/var/log/neutron state=directory
       become: yes

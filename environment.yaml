@@ -1,5 +1,8 @@
 ---
-version_release: liberty
+version_release: kilo
 version_branch: "stable/{{ version_release }}"
 nova_database: "{{ version_release }}_nova"
 keystone_database: "{{ version_release }}_keystone"
+neutron_database: "{{ version_release }}_neutron"
+clone_path_prefix: "z/gl"
+l3_interface_driver: BridgeInterfaceDriver
