@@ -6,4 +6,8 @@ keystone_database: "{{ version_release }}_keystone"
 neutron_database: "{{ version_release }}_neutron"
 clone_path_prefix: "z/gl"
 l3_interface_driver: BridgeInterfaceDriver
+ml2_mechanism_driver: linuxbridge
 openstackclient_version: 1.0.4
+firewall_driver: IptablesFirewallDriver
+tenant_network_types: "vlan,vxlan"
+type_drivers: "local,flat,vlan,vxlan"

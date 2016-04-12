@@ -1,0 +1,13 @@
+[ml2]
+type_drivers = {{type_drivers}}
+mechanism_drivers = {{ml2_mechanism_driver}},l2population
+tenant_network_types = {{tenant_network_types}}
+
+[securitygroup]
+firewall_driver = neutron.agent.linux.iptables_firewall.{{firewall_driver}}
+
+[ml2_type_vlan]
+network_vlan_ranges = physnet1:1000:2999
+
+[ml2_type_vxlan]
+vni_ranges = 1:1000

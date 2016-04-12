@@ -8,6 +8,7 @@
     - repo_dir: "{{base_clone_path}}/neutron"
     - config_template_base: "/tmp/neutron_config_"
     - neutron_config_template: "{{config_template_base}}neutron"
+    - ml2_config_template: "{{config_template_base}}ml2_config"
     - l3_config_template: "{{config_template_base}}l3_agent"
   pre_tasks:
     - name: Install requirements with apt
@@ -46,8 +47,15 @@
       shell: crudini --merge /etc/neutron/neutron.conf < {{neutron_config_template}}
       become: yes
       tags: config
+    - name: Prepare Neutron ML2 configuration
+      template: src=config/neutron-ml2-config.j2 dest={{ml2_config_template}}
+      tags: config-ml2
+    - name: Configure Neutron ML2
+      shell: crudini --merge /etc/neutron/plugins/ml2/ml2_conf.ini < {{ml2_config_template}}
+      tags: config-ml2
+      become: yes
     - name: Prepare Neutron L3 agent configuration template
-      template: src=neutron-l3-config.j2 dest={{l3_config_template}}
+      template: src=config/neutron-l3-config.j2 dest={{l3_config_template}}
       tags: config-l3
     - name: Configure Neutron L3 agent
       shell: crudini --merge /etc/neutron/l3_agent.ini < {{l3_config_template}}
