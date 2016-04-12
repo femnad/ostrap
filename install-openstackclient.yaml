@@ -1,9 +1,15 @@
 ---
 - hosts: all
   vars_files:
+    - environment.yaml
     - path_vars.yaml
   vars:
     repo_dir: "{{base_clone_path}}/python-openstackclient"
   tasks:
-    - git: repo=git://git.openstack.org/openstack/python-openstackclient dest={{repo_dir}} version=1.0.4 accept_hostkey=yes
-    - script: install-openstackclient.sh {{repo_dir}} {{virtualenv_path}}
+    - name: Clone openstackclient repository
+      git: repo=git://git.openstack.org/openstack/python-openstackclient dest={{repo_dir}}
+           version={{openstackclient_version}} accept_hostkey=yes
+      tags: clone
+    - name: Install openstackclient
+      script: install-component.sh {{repo_dir}} {{virtualenv_path}}
+      tags: install

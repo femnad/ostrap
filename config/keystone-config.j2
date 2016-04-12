@@ -1,0 +1,17 @@
+[DEFAULT]
+admin_token = {{admin_token}}
+debug = True
+log_dir = /var/log/keystone
+
+[database]
+connection = mysql://keystone:keystone@controller/{{keystone_database}}
+
+[memcache]
+server = localhost:11211
+
+[token]
+provider = keystone.token.providers.uuid.Provider
+token = driver keystone.token.persistence.backends.memcache.Token
+
+[revoke]
+driver = keystone.contrib.revoke.backends.sql.Revoke
