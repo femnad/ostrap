@@ -7,6 +7,7 @@
   vars:
     - repo_dir: "{{base_clone_path}}/neutron"
     - config_template_base: "/tmp/neutron_config_"
+    - neutron_config_template: "{{config_template_base}}neutron"
     - l3_config_template: "{{config_template_base}}l3_agent"
   pre_tasks:
     - name: Install requirements with apt
@@ -38,8 +39,11 @@
       script: copy-neutron-config.sh {{repo_dir}}
       become: yes
       tags: genconfig
+    - name: Prepare Neutron configuration template
+      template: src=config/neutron-config.j2 dest={{neutron_config_template}}
+      tags: config
     - name: Configure Neutron
-      script: configure-neutron-network-node.sh
+      shell: crudini --merge /etc/neutron/neutron.conf < {{neutron_config_template}}
       become: yes
       tags: config
     - name: Prepare Neutron L3 agent configuration template
