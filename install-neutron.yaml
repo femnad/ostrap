@@ -10,6 +10,7 @@
     - neutron_config_template: "{{config_template_base}}neutron"
     - ml2_config_template: "{{config_template_base}}ml2_config"
     - l3_config_template: "{{config_template_base}}l3_agent"
+    - dhcp_config_template: "{{config_template_base}}dhcp_agent"
   pre_tasks:
     - name: Install requirements with apt
       apt: name={{item}} state=installed
@@ -61,6 +62,13 @@
       shell: crudini --merge /etc/neutron/l3_agent.ini < {{l3_config_template}}
       become: yes
       tags: config-l3
+    - name: Prepare Neutron DHCP agent configuration template
+      template: src=config/neutron-dhcp-config.j2 dest={{dhcp_config_template}}
+      tags: config-dhcp
+    - name: Configure Neutron DHCP agent
+      shell: crudini --merge /etc/neutron/dhcp_agent.ini < {{dhcp_config_template}}
+      become: yes
+      tags: config-dhcp
     - name: Create log dir
       file: name=/var/log/neutron state=directory
       become: yes

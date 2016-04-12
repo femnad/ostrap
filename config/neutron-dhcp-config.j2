@@ -1,0 +1,5 @@
+[DEFAULT]
+interface_driver = neutron.agent.linux.interface.{{l3_interface_driver}}
+dhcp_driver = neutron.agent.linux.dhcp.Dnsmasq
+dhcp_delete_namespaces = True
+debug = True

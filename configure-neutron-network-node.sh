@@ -1,10 +1,4 @@
 #!/bin/bash
-dhcp_config=/etc/neutron/dhcp_agent.ini
-crudini --set $dhcp_config DEFAULT interface_driver neutron.agent.linux.interface.OVSInterfaceDriver
-crudini --set $dhcp_config DEFAULT dhcp_driver neutron.agent.linux.dhcp.Dnsmasq
-crudini --set $dhcp_config DEFAULT dhcp_delete_namespaces True
-crudini --set $dhcp_config DEFAULT debug True
-
 metadata_config=/etc/neutron/metadata_agent.ini
 crudini --set $metadata_config DEFAULT auth_uri http://controller:5000
 crudini --set $metadata_config DEFAULT auth_url http://controller:35357
