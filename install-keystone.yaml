@@ -1,8 +1,7 @@
 ---
 - vars_files:
     - environment.yaml
-    - path_vars.yaml
-    - credential-params.yaml
+    - paths.yaml
   hosts: all
   vars:
     keystone_repo_dir: "{{base_clone_path}}/keystone"

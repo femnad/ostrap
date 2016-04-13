@@ -2,8 +2,7 @@
 - hosts: all
   vars_files:
     - environment.yaml
-    - path_vars.yaml
-    - credential-params.yaml
+    - paths.yaml
   vars:
     - repo_dir: "{{base_clone_path}}/neutron"
     - config_template_base: "/tmp/neutron_config_"

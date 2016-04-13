@@ -1,8 +1,11 @@
 ---
+repo_base: git://git.openstack.org/openstack
+
 version_release: kilo
 version_branch: "stable/{{ version_release }}"
 
 clone_path_prefix: "z/gl"
+virtualenv_prefix: "y/virtualenvs/osvenv"
 
 ceilometer_database: "{{ version_release}}_ceilometer"
 glance_database: "{{ version_release }}_glance"
@@ -20,3 +23,17 @@ tenant_network_types: "vlan,vxlan"
 type_drivers: "local,flat,vlan,vxlan"
 
 openstackclient_version: 1.0.4
+
+controller_host: controller
+
+region: RegionOne
+
+db_user: osdb
+db_password: toor
+db_host: controller
+
+admin_token: nekot
+admin_password: nimda
+
+rabbitmq_user: osrabbit
+rabbitmq_password: hare

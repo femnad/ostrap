@@ -1,0 +1,12 @@
+---
+- hosts: all
+  vars_files:
+    - environment.yaml
+    - paths.yaml
+  roles:
+    - { role: repo-clone-install, project: heat }
+    - { role: mysql, project: heat}
+    - { role: service, project: heat, description: Orchestration, port: 8004,
+        endpoint: "v1/%(tenant_id)s", type: orchestration }
+    - { role: config, project: heat }
+

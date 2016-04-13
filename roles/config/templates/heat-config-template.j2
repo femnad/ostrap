@@ -1,0 +1,23 @@
+[database]
+connection = mysql://heat:HEAT_DBPASS@controller/heat
+
+[DEFAULT]
+rpc_backend = rabbit
+heat_metadata_server_url = http://controller:8000
+heat_waitcondition_server_url = http://controller:8000/v1/waitcondition
+stack_domain_admin = heat_domain_admin
+stack_domain_admin_password = HEAT_DOMAIN_PASS
+stack_user_domain_name = heat_user_domain
+debug = True
+
+[oslo_messaging_rabbit]
+rabbit_host = controller
+rabbit_userid = openstack
+rabbit_password = RABBIT_PASS
+
+[keystone_authtoken]
+auth_uri = http://controller:5000/v2.0
+identity_uri = http://controller:35357
+admin_tenant_name = service
+admin_user = heat
+admin_password = HEAT_PASS

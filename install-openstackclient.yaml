@@ -2,7 +2,7 @@
 - hosts: all
   vars_files:
     - environment.yaml
-    - path_vars.yaml
+    - paths.yaml
   vars:
     repo_dir: "{{base_clone_path}}/python-openstackclient"
   tasks:

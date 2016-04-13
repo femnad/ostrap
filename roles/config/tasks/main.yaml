@@ -1,0 +1,19 @@
+---
+- name: Generate {{project}} configuration template
+  command: tox -egenconfig chdir={{base_clone_path}}/{{project}}
+  tags: genconfig
+- name: Save {{project}} config updates
+  template: src="{{project}}-config-template.j2" dest={{config_template_base}}/{{project}}.conf.tmp
+  tags: config-update
+- name: Create config directory
+  file: path=/etc/{{project}} state=directory
+  tags: config-init
+  become: yes
+- name: Copy {{project}} configuration
+  command: cp {{base_clone_path}}/{{project}}/etc/{{project}}/{{project}}.conf.sample /etc/{{project}}/{{project}}.conf
+  tags: config-copy
+  become: yes
+- name: Merge {{project}} config updates
+  shell: crudini --merge /etc/{{project}}/{{project}}.conf < {{config_template_base}}/{{project}}.conf.tmp
+  tags: config-merge
+  become: yes

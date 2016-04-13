@@ -2,8 +2,7 @@
 - hosts: all
   vars_files:
     - environment.yaml
-    - path_vars.yaml
-    - credential-params.yaml
+    - paths.yaml
   vars:
     repo_dir: "{{base_clone_path}}/glance"
     api_config_template: "{{config_template_base}}/glance-api.conf.temp"

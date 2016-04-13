@@ -1,0 +1,11 @@
+---
+- name: Add {{project}} database
+  mysql_db: name={{version_release}}_{{project}} state=present
+            login_host={{db_host}}
+            login_user={{db_user}} login_password={{db_password}}
+  tags: db-init
+- name: Add {{project}} database user
+  mysql_user: name={{project}} password={{project}} priv=*.*:ALL
+              state=present login_host={{db_host}}
+              login_user={{db_user}} login_password={{db_password}}
+  tags: db-init
