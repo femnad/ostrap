@@ -11,6 +11,6 @@ After the 26. time manually installing and configuring different OpenStack compo
 How?
 ====
 
-Modify `path_vars.yaml` and `credential_params.yaml` and run the desired playbook, e.g. for installing Keystone
+Modify `environment.yaml`, `path_vars.yaml` and `credential_params.yaml` and run the desired playbook, e.g. for installing keystone:
 
     $ ansible-playbook install-keystone.yaml

@@ -1,16 +1,21 @@
 ---
+version_release: kilo
+version_branch: "stable/{{ version_release }}"
+
+clone_path_prefix: "z/gl"
+
+glance_database: "{{ version_release }}_glance"
+keystone_database: "{{ version_release }}_keystone"
+neutron_database: "{{ version_release }}_neutron"
+nova_database: "{{ version_release }}_nova"
+
 compute_driver: libvirt.LibvirtDriver
 linuxnet_interface_driver: LinuxBridgeInterfaceDriver
 
-version_release: kilo
-version_branch: "stable/{{ version_release }}"
-nova_database: "{{ version_release }}_nova"
-keystone_database: "{{ version_release }}_keystone"
-neutron_database: "{{ version_release }}_neutron"
-clone_path_prefix: "z/gl"
+firewall_driver: IptablesFirewallDriver
 l3_interface_driver: BridgeInterfaceDriver
 ml2_mechanism_driver: linuxbridge
-openstackclient_version: 1.0.4
-firewall_driver: IptablesFirewallDriver
 tenant_network_types: "vlan,vxlan"
 type_drivers: "local,flat,vlan,vxlan"
+
+openstackclient_version: 1.0.4

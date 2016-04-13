@@ -1,0 +1,19 @@
+[DEFAULT]
+notification_driver = noop
+debug = True
+
+[database]
+connection = mysql://glance:glance@controller/{{glance_database}}
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+auth_plugin = password
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = glance
+password = glance
+
+[paste_deploy]
+flavor = keystone

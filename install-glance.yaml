@@ -1,35 +1,50 @@
 ---
 - hosts: all
   vars_files:
+    - environment.yaml
     - path_vars.yaml
     - credential-params.yaml
   vars:
     repo_dir: "{{base_clone_path}}/glance"
+    api_config_template: "{{config_template_base}}/glance-api.conf.temp"
+    registry_config_template: "{{config_template_base}}/glance-registry.conf.temp"
   tasks:
-    - git: repo=git://git.openstack.org/openstack/glance dest={{repo_dir}} version=stable/kilo
+    - git: repo=git://git.openstack.org/openstack/glance dest={{repo_dir}}
+           version={{version_branch}}
       tags: clone
-    - script: install-glance.sh {{repo_dir}} {{virtualenv_path}}
+    - script: install-component.sh {{repo_dir}} {{virtualenv_path}}
       tags: install
     - script: copy-glance-config.sh {{repo_dir}}
       become: yes
       tags: genconfig
-    - script: configure-glance-api.sh
-      become: yes
+    - name: Prepare glance API configuration
+      template: src=config/glance-api-config.j2 dest={{api_config_template}}
       tags: config
-    - script: configure-glance-registry.sh
+    - name: Configure glance API
+      shell: crudini --merge /etc/glance/glance-api.conf < {{api_config_template}}
       tags: config
       become: yes
-    - mysql_db: name=glance state=present login_user={{db_user}} login_password={{db_password}} encoding=utf8
-      tags: init-db
-    - mysql_user: name=glance password=glance priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
-      tags: init-db
+    - name: Prepare glance registry configuration
+      template: src=config/glance-registry-config.j2 dest={{registry_config_template}}
+      tags: config
+    - name: Configure glance registry
+      shell: crudini --merge /etc/glance/glance-registry.conf < {{registry_config_template}}
+      tags: config
+      become: yes
     - name: Create log dirs
       file: path=/var/log/glance state=directory
-      tags: sync-db
+      tags: config
       become: yes
+    - mysql_db: name={{glance_database}} state=present
+                login_user={{db_user}} login_password={{db_password}}
+                encoding=utf8
+      tags: db-init
+    - mysql_user: name=glance password=glance priv=*.*:ALL state=present
+                  login_user={{db_user}} login_password={{db_password}}
+      tags: db-init
     - name: Synchronize Glance database
       command: "{{virtualenv_path}}/bin/python {{virtualenv_path}}/bin/glance-manage db_sync"
       become: yes
-      tags: sync-db
+      tags: db-sync
     - script: add-glance-service.sh {{admin_openrc_file}} {{virtualenv_path}}/bin/activate
       tags: service
