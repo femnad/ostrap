@@ -1,10 +1,12 @@
 ---
 - hosts: all
   vars_files:
+    - environment.yaml
     - path_vars.yaml
     - credential-params.yaml
   vars:
     - repo_dir: "{{base_clone_path}}/ceilometer"
+    - config_template: "{{config_template_base}}/ceilometer.conf.temp"
   pre_tasks:
     - name: Install requirements with apt
       apt: name={{item}} state=latest
@@ -16,18 +18,15 @@
       tags: reqs
   tasks:
     - name: Clone ceilometer repository
-      git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}} version=stable/kilo accept_hostkey=yes
+      git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}}
+           version={{version_branch}} accept_hostkey=yes
       tags: clone
     - name: Install ceilometer
-      script: install-ceilometer.sh {{repo_dir}} {{virtualenv_activator}}
+      script: install-component.sh {{repo_dir}} {{virtualenv_path}}
       tags: install
-    - mysql_db: name=ceilometer state=present login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
-    - mysql_user: name=ceilometer password=ceilometer priv=*.*:ALL state=present login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
     - name: Initialize MongoDB
-      script: init-ceilometer-db.sh
-      tags: mongodb-init
+      script: init-ceilometer-db.sh {{ceilometer_database}}
+      tags: db-init
     - name: Add services
       script: add-ceilometer-service.sh {{admin_openrc_file}} {{virtualenv_activator}}
       tags: services
@@ -35,10 +34,22 @@
       script: ceilometer-genconfig.sh {{repo_dir}}
       become: yes
       tags: genconfig
+    - name: Prepare ceilometer configuration
+      template: src=config/ceilometer-config.j2 dest={{config_template}}
+      tags: config
     - name: Configure ceilometer
-      script: configure-ceilometer.sh
+      shell: crudini --merge /etc/ceilometer/ceilometer.conf < {{config_template}}
       become: yes
       tags: config
+    - name: Configure nova
+      ini_file: dest=/etc/nova/nova.conf section=DEFAULT option=item.key value=item.value
+      with_dict:
+        instance_usage_audit: True
+        instance_usage_audit_period: hour
+        notify_on_state_change: vm_and_task_state
+        notification_driver: messagingv2
+      become: yes
+      tags: config-nova
     - name: Create log dir
       file: path=/var/log/ceilometer state=directory
       become: yes

@@ -23,6 +23,7 @@
         - nbd-client
         - pkg-config
         - python-dev
+        - python-mysqldb
         - qemu-kvm
       tags: reqs
   tasks:
@@ -52,11 +53,11 @@
       become: yes
       tags: config
     - name: Add Nova database
-      mysql_db: name={{nova_database}} state=present
+      mysql_db: name={{nova_database}} state=present login_host=controller
                 login_user={{db_user}} login_password={{db_password}}
       tags: db-init
     - name: Add Nova database user
-      mysql_user: name=nova password=nova priv=*.*:ALL state=present
+      mysql_user: name=nova password=nova priv=*.*:ALL state=present login_host=controller
                   login_user={{db_user}} login_password={{db_password}}
       tags: db-init
     - name: Synchronize Nova database
