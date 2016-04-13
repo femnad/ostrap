@@ -35,7 +35,6 @@
     - name: Generate configuration path
       file: path=/etc/nova state=directory
       tags: genconfig
-      become: yes
     - name: Generate configuration
       script: generate-nova-config.sh {{repo_dir}} {{virtualenv_path}}
       become: yes
@@ -45,7 +44,7 @@
       template: src=config/nova-config.j2 dest={{nova_config_template}}
       tags: config
     - name: Configure nova
-      shell: crudini --merge /etc/nova/nova.conf << {{nova_config_template}}
+      shell: crudini --merge /etc/nova/nova.conf < {{nova_config_template}}
       become: yes
       tags: config
     - name: Add Nova database
