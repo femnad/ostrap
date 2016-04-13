@@ -1,4 +1,7 @@
 ---
+compute_driver: libvirt.LibvirtDriver
+linuxnet_interface_driver: LinuxBridgeInterfaceDriver
+
 version_release: kilo
 version_branch: "stable/{{ version_release }}"
 nova_database: "{{ version_release }}_nova"

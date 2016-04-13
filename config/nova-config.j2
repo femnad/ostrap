@@ -1,0 +1,43 @@
+[DEFAULT]
+compute_driver = {{compute_driver}}
+rpc_backend = rabbit
+auth_strategy = keystone
+debug = True
+state_path = /var/lib/nova
+log_dir = /var/log/nova
+network_api_class = nova.network.neutronv2.api.API
+security_group_api = neutron
+linuxnet_interface_driver = nova.network.linux_net.{{linuxnet_interface_driver}}
+firewall_driver = nova.virt.firewall.NoopFirewallDriver
+
+[database]
+connection = mysql://nova:nova@controller/{{nova_database}}
+
+[glance]
+host = controller
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+auth_plugin = password
+project_domain_id = default
+user_domain_id = default
+project_name = service
+username = nova
+password = nova
+
+[oslo_concurrency]
+lock_path /var/lib/nova/tmp
+
+[oslo_messaging_rabbit]
+rabbit_host = controller
+rabbit_userid = {{rabbitmq_user}}
+rabbit_password = {{rabbitmq_password}}
+
+[neutron]
+url = http://controller:9696
+auth_strategy = keystone
+admin_auth_url = http://controller:35357/v2.0
+admin_tenant_name = service
+admin_username = neutron
+admin_password = neutron

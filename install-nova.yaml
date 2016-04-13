@@ -5,11 +5,11 @@
     - path_vars.yaml
     - credential-params.yaml
   vars:
-    - repo_dir: "{{base_clone_path}}/{{version_release}}/nova"
-    - compute_driver: libvirt.LibvirtDriver
+    - repo_dir: "{{base_clone_path}}/nova"
+    - nova_config_template: "/tmp/nova.conf.temp"
   pre_tasks:
     - name: Install requirements with apt
-      apt: name={{item}} state=latest
+      apt: name={{item}} state=latest update_cache=yes
       become: yes
       with_items:
         - crudini
@@ -41,28 +41,27 @@
       become: yes
       tags: genconfig
       when: version_release == "kilo"
+    - name: Prepare nova configuration template
+      template: src=config/nova-config.j2 dest={{nova_config_template}}
+      tags: config
+    - name: Configure nova
+      shell: crudini --merge /etc/nova/nova.conf << {{nova_config_template}}
+      become: yes
+      tags: config
     - name: Add Nova database
       mysql_db: name={{nova_database}} state=present
                 login_user={{db_user}} login_password={{db_password}}
-      tags: init_db
+      tags: db-init
     - name: Add Nova database user
       mysql_user: name=nova password=nova priv=*.*:ALL state=present
                   login_user={{db_user}} login_password={{db_password}}
-      tags: init_db
+      tags: db-init
     - name: Synchronize Nova database
       command: "{{virtualenv_bin}}/nova-manage db sync"
       become: yes
-      tags: init_db
-    - name: Configure Nova
-      script: configure-nova.sh {{compute_driver}}
-      become: yes
-      tags: config
+      tags: db-sync
     - name: Add Nova services
       script: add-nova-service.sh {{admin_openrc_file}} {{virtualenv_path}}
       tags: service
     - name: Add instances state directory
-      file: path=/var/lib/nova/instances state=path
-    - name: Configure Nova to use Neutron networking
-      script: configure-nova-neutron-network.sh
-      become: yes
-      tags: network
+      file: path=/var/lib/nova/instances state=directory
