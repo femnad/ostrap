@@ -32,6 +32,10 @@
     - name: Install nova
       script: install-component.sh {{repo_dir}} {{virtualenv_path}}
       tags: install
+    - name: Install Python Libvirt module
+      pip: name=libvirt-python virtualenv={{virtualenv_path}}
+      tags: install
+      when: compute_driver == "libvirt.LibvirtDriver"
     - name: Generate configuration path
       file: path=/etc/nova state=directory
       tags: genconfig
