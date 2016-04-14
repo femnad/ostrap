@@ -9,9 +9,16 @@
   file: path=/etc/{{project}} state=directory
   tags: config-init
   become: yes
-- name: Copy {{project}} configuration
+- name: Copy {{project}} configuration sample
   command: cp {{base_clone_path}}/{{project}}/etc/{{project}}/{{project}}.conf.sample /etc/{{project}}/{{project}}.conf
-  tags: config-copy
+  become: yes
+  tags: config-copy-sample
+- name: Copy {{project}} API and policy configs
+  command: "cp {{base_clone_path}}/{{project}}/etc/{{project}}/{{item}} /etc/{{project}}/{{item}}"
+  tags: config-copy-rest
+  with_items:
+    - api-paste.ini
+    - policy.json
   become: yes
 - name: Merge {{project}} config updates
   shell: crudini --merge /etc/{{project}}/{{project}}.conf < {{config_template_base}}/{{project}}.conf.tmp
