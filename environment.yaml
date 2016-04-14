@@ -9,6 +9,7 @@ virtualenv_prefix: "y/virtualenvs/osvenv"
 
 ceilometer_database: "{{ version_release}}_ceilometer"
 glance_database: "{{ version_release }}_glance"
+heat_database: "{{ version_release }}_heat"
 keystone_database: "{{ version_release }}_keystone"
 neutron_database: "{{ version_release }}_neutron"
 nova_database: "{{ version_release }}_nova"

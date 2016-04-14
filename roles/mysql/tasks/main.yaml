@@ -9,3 +9,7 @@
               state=present login_host={{db_host}}
               login_user={{db_user}} login_password={{db_password}}
   tags: db-init
+- name: Synchronize {{project}} database
+  command: "{{virtualenv_bin}}/{{project}}-manage db_sync"
+  become: yes
+  tags: db-sync
