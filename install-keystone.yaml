@@ -6,7 +6,9 @@
     - environment.yaml
     - paths.yaml
   roles:
-    - { role: package, project: "{{project}}", packages: [crudini, git, mariadb-server, memcached, libffi-dev, libssl-dev, libmariadbclient-dev, python-dev, python-virtualenv, rabbitmq-server] }
+    - { role: package, project: "{{project}}", packages: [git, mariadb-server, memcached,
+        libffi-dev, libssl-dev, libmariadbclient-dev, python-dev, python-virtualenv,
+        rabbitmq-server] }
     - { role: repo-clone-install, project: "{{project}}" }
     - { role: config, project: "{{project}}" }
     - { role: mysql, project: "{{project}}" }

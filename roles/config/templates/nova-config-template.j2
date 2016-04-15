@@ -9,6 +9,7 @@ network_api_class = nova.network.neutronv2.api.API
 security_group_api = neutron
 linuxnet_interface_driver = nova.network.linux_net.{{linuxnet_interface_driver}}
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
+lock_path = /var/lib/nova/lock
 
 [database]
 connection = mysql://nova:nova@controller/{{nova_database}}
