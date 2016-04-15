@@ -9,6 +9,6 @@
                  libxslt1-dev, nbd-client, pkg-config, python-dev, python-mysqldb, qemu-kvm] }
     - { role: repo-clone-install, project: nova }
     - { role: config, project: nova, config_files: [nova] }
-    - { role: mysql, project: "{{project}}" }
+    - { role: mysql, project: nova, sync_command: "db sync" }
     - { role: deprecated-service, project: nova, port: 8774, endpoint: "/v2/%(tenant_id)s",
         type: compute }

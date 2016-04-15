@@ -10,6 +10,6 @@
               login_user={{db_user}} login_password={{db_password}}
   tags: db-init
 - name: Synchronize {{project}} database
-  command: "{{virtualenv_bin}}/{{project}}-manage db_sync"
+  command: "{{virtualenv_bin}}/{{project}}-manage {{sync_command}}"
   become: yes
   tags: db-sync
