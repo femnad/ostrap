@@ -1,0 +1,7 @@
+---
+- name: Install requirements for {{project}}
+  apt: name={{item}} state=latest update_cache=yes
+  with_items: "{{packages}}"
+  when: ansible_os_family == "Debian"
+  become: yes
+  tags: reqs

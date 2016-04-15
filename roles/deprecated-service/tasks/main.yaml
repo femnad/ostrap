@@ -1,0 +1,21 @@
+- name: Create {{project}} user
+  environment: "{{admin_environment}}"
+  command: "{{deprecated_keystoneclient}} user-create --name {{project}} --password {{project}}"
+  tags: service-user
+- name: Add admin role to {{project}} user
+  environment: "{{admin_environment}}"
+  command: "{{openstackclient_bin}} role add --project service --user {{project}} admin"
+  tags: service-admin-role
+- name: Create service for {{project}}
+  environment: "{{admin_environment}}"
+  command: "{{openstackclient_bin}} service create --name {{project}} \
+            --description {{description}} {{type}}"
+  tags: service-create
+- name: Create endpoints for {{project}}
+  environment: "{{admin_environment}}"
+  command: "{{openstackclient_bin}} endpoint create \
+            --publicurl http://{{controller_host}}:{{port}}/{{endpoint}} \
+            --internalurl http://{{controller_host}}:{{port}}/{{endpoint}} \
+            --adminurl http://{{controller_host}}:{{port}}/{{endpoint}} \
+            --region {{region}} {{type}}"
+  tags: service-endpoint

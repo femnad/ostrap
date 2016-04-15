@@ -1,72 +1,13 @@
 ---
-- vars_files:
+- hosts: all
+  vars:
+    - project: keystone
+  vars_files:
     - environment.yaml
     - paths.yaml
-  hosts: all
-  vars:
-    keystone_repo_dir: "{{base_clone_path}}/keystone"
-    keystone_config_template: "/tmp/keystone_config"
-  pre_tasks:
-    - name: Install requirements with apt
-      apt: name={{item}} state=latest
-      become: yes
-      with_items:
-        - crudini
-        - git
-        - mariadb-server
-        - memcached
-        - libffi-dev
-        - libssl-dev
-        - libmariadbclient-dev
-        - python-dev
-        - python-virtualenv
-        - rabbitmq-server
-      when: ansible_os_family == "Debian"
-      tags: reqs
-  tasks:
-    - name: Add database admin
-      script: add-db-admin.sh {{db_user}} {{db_password}}
-      tags: db-admin-init
-      become: yes
-    - name: Clone keystone repo
-      git: repo=git://git.openstack.org/openstack/keystone dest={{keystone_repo_dir}}
-           version={{version_branch}} accept_hostkey=yes
-      tags: clone
-    - name: Install keystone
-      script: install-component.sh {{keystone_repo_dir}} {{virtualenv_path}}
-      tags: install
-    - name: Install required Python packages
-      pip: name={{item}} virtualenv={{virtualenv_path}}
-      with_items:
-        - MySQL-python
-        - python-memcached
-      tags: install-pip
-    - name: Add keystone database
-      mysql_db: name={{keystone_database}} state=present
-                login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
-    - name: Add keystone database user
-      mysql_user: name=keystone password=keystone priv=*.*:ALL state=present
-                  login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
-    - name: Generate configuration
-      script: bootstrap-keystone.sh {{keystone_repo_dir}}
-      become: yes
-      tags: genconfig
-    - name: Prepare keystone configuration template
-      template: src=config/keystone-config.j2 dest={{keystone_config_template}}
-      tags: config
-    - name: Configure keystone
-      shell: crudini --merge /etc/keystone/keystone.conf < {{keystone_config_template}}
-      become: yes
-      tags: config
-    - name: Sync keystone database
-      command: "{{virtualenv_path}}/bin/python {{virtualenv_path}}/bin/keystone-manage db_sync"
-      become: yes
-      tags: db-sync
-    - name: Add keystone services
-      script: add-keystone-services.sh {{admin_token}} {{virtualenv_path}} {{admin_password}}
-      tags: service
-    - name: Add admin openrc file
-      script: add-admin-openrc-file.sh {{openrc_dir}} {{admin_openrc_file}} {{admin_password}}
-      tags: openrc
+  roles:
+    - { role: package, project: "{{project}}", packages: [crudini, git, mariadb-server, memcached, libffi-dev, libssl-dev, libmariadbclient-dev, python-dev, python-virtualenv, rabbitmq-server] }
+    - { role: repo-clone-install, project: "{{project}}" }
+    - { role: config, project: "{{project}}" }
+    - { role: mysql, project: "{{project}}" }
+    - { role: deprecated-bootstrap }

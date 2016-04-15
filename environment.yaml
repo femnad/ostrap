@@ -1,8 +1,8 @@
 ---
 repo_base: git://git.openstack.org/openstack
 
-version_release: kilo
-version_branch: "stable/{{ version_release }}"
+version_release: juno
+version_branch: juno-eol
 
 clone_path_prefix: "z/gl"
 virtualenv_prefix: "y/virtualenvs/osvenv"
@@ -24,6 +24,7 @@ tenant_network_types: "vlan,vxlan"
 type_drivers: "local,flat,vlan,vxlan"
 
 openstackclient_version: 1.0.4
+deprecated_keystoneclient: "{{virtualenv_bin}}/keystone"
 
 controller_host: controller
 
@@ -33,6 +34,7 @@ db_user: osdb
 db_password: toor
 db_host: controller
 
+# Identity service credentials
 admin_token: nekot
 admin_password: nimda
 

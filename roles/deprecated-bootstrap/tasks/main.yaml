@@ -1,0 +1,33 @@
+- name: Create admin tenant
+  environment: "{{admin_bootstrap_environment}}"
+  command: "{{deprecated_keystoneclient}} tenant-create --name admin --description \"Admin Tenant\""
+  tags: identity-admin
+- name: Create admin user
+  environment: "{{admin_bootstrap_environment}}"
+  command: "{{deprecated_keystoneclient}} user-create --name admin --pass {{admin_password}} --email admin"
+  tags: identity-admin
+- name: Create admin role
+  environment: "{{admin_bootstrap_environment}}"
+  command: "{{deprecated_keystoneclient}} role-create --name admin"
+  tags: identity-admin
+- name: Add admin role to admin user
+  environment: "{{admin_bootstrap_environment}}"
+  command: "{{deprecated_keystoneclient}} user-role-add --user admin --tenant admin --role admin"
+  tags: identity-admin
+- name: Create service tenant
+  environment: "{{admin_bootstrap_environment}}"
+  command: "{{deprecated_keystoneclient}} tenant-create --name service --description \"Service Tenant\""
+  tags: identity-service
+- name: Create identity service
+  environment: "{{admin_bootstrap_environment}}"
+  command: "{{deprecated_keystoneclient}} service-create --name keystone --type identity --description \"OpenStack Identity\""
+  tags: identity-service
+- name: Create identity endpoint
+  environment: "{{admin_bootstrap_environment}}"
+  shell: "{{deprecated_keystoneclient}} endpoint-create \
+  --service-id $({{deprecated_keystone}} service-list | awk '/ identity / {print $2}') \
+  --publicurl http://controller:5000/v2.0 \
+  --internalurl http://controller:5000/v2.0 \
+  --adminurl http://controller:35357/v2.0 \
+  --region {{region}}"
+  tags: identity-service
