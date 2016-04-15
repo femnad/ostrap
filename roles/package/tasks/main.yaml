@@ -6,6 +6,6 @@
   become: yes
   tags: reqs
 - name: Install Python requirements for {{project}}
-  pip: name={{item}} virtualenv={{virtualenv_path}}
-  with_items: "{{pip_packages}}"
+  pip: name={{item.key}} version={{item.value}} virtualenv={{virtualenv_path}}
+  with_dict: "{{pip_packages}}"
   tags: reqs-pip

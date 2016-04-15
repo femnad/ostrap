@@ -7,11 +7,11 @@ log_dir = /var/log/keystone
 connection = mysql://keystone:keystone@controller/{{keystone_database}}
 
 [memcache]
-server = localhost:11211
+servers = localhost:11211
 
 [token]
 provider = keystone.token.providers.uuid.Provider
-token = driver keystone.token.persistence.backends.memcache.Token
+driver = keystone.token.persistence.backends.memcache.Token
 
 [revoke]
 driver = keystone.contrib.revoke.backends.sql.Revoke

@@ -1,0 +1,6 @@
+---
+admin_bootstrap_environment:
+  OS_TOKEN:
+    "{{admin_token}}"
+  OS_URL:
+    http://{{controller_host}}:35357/v2.0

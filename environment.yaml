@@ -1,11 +1,11 @@
 ---
 repo_base: git://git.openstack.org/openstack
 
-version_release: juno
-version_branch: juno-eol
+version_release: kilo
+version_branch: stable/kilo
 
 clone_path_prefix: "z/gl"
-virtualenv_prefix: "y/virtualenvs/osvenv"
+virtualenv_prefix: "y/virtualenvs/osvenv/{{version_release}}"
 
 ceilometer_database: "{{ version_release}}_ceilometer"
 glance_database: "{{ version_release }}_glance"
@@ -23,7 +23,10 @@ ml2_mechanism_driver: linuxbridge
 tenant_network_types: "vlan,vxlan"
 type_drivers: "local,flat,vlan,vxlan"
 
+# Python package versions
+mysql_python_version: 1.2.5
 openstackclient_version: 1.0.4
+
 deprecated_keystoneclient: "{{virtualenv_bin}}/keystone"
 
 controller_host: controller

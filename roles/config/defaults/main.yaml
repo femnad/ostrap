@@ -1,0 +1,7 @@
+---
+sample_config_dir:
+  "{{base_clone_path}}/{{project}}/etc/{{project}}"
+api_paste_file:
+  api_paste.ini
+policy_file:
+  policy.json

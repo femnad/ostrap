@@ -1,3 +1,4 @@
+---
 - name: Create admin tenant
   environment: "{{admin_bootstrap_environment}}"
   command: "{{deprecated_keystoneclient}} tenant-create --name admin --description \"Admin Tenant\""

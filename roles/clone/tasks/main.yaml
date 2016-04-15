@@ -1,0 +1,5 @@
+---
+- name: Clone {{project}} repository
+  git: repo={{repo_base}}/{{project}} dest={{base_clone_path}}/{{project}}
+       version={{version_branch}} accept_hostkey=yes
+  tags: clone
