@@ -11,5 +11,5 @@
     - { role: repo-clone-install, project: nova }
     - { role: config, project: nova, config_files: [nova] }
     - { role: mysql, project: nova, sync_command: "db sync" }
-    - { role: deprecated-service, project: nova, port: 8774, endpoint: "/v2/%(tenant_id)s",
-        type: compute }
+    - { role: deprecated-service, project: nova, port: 8774, endpoint: "/v2/%\\(tenant_id\\)s",
+        type: compute, description: "OpenStack Compute" }
