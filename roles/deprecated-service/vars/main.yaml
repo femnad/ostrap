@@ -1,0 +1,10 @@
+---
+admin_environment:
+  OS_TENANT_NAME:
+    admin
+  OS_USERNAME:
+    admin
+  OS_PASSWORD:
+    "{{admin_password}}"
+  OS_AUTH_URL:
+    http://{{controller_host}}:35357/v2.0
