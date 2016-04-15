@@ -3,68 +3,12 @@
   vars_files:
     - environment.yaml
     - paths.yaml
-  vars:
-    - repo_dir: "{{base_clone_path}}/nova"
-    - nova_config_template: "/tmp/nova.conf.temp"
-  pre_tasks:
-    - name: Install requirements with apt
-      apt: name={{item}} state=latest update_cache=yes
-      become: yes
-      with_items:
-        - crudini
-        - libffi-dev
-        - libmysqlclient-dev
-        - libpq-dev
-        - libvirt-bin
-        - libvirt-dev
-        - libxml2-dev
-        - libxslt1-dev
-        - nbd-client
-        - pkg-config
-        - python-dev
-        - python-mysqldb
-        - qemu-kvm
-      tags: reqs
-  tasks:
-    - git: repo=git://git.openstack.org/openstack/nova dest={{repo_dir}}
-           version={{version_branch}} accept_hostkey=yes
-      tags: clone
-    - name: Install nova
-      script: install-component.sh {{repo_dir}} {{virtualenv_path}}
-      tags: install
-    - name: Install Python Libvirt module
-      pip: name=libvirt-python virtualenv={{virtualenv_path}}
-      tags: install
-      when: compute_driver == "libvirt.LibvirtDriver"
-    - name: Generate configuration path
-      file: path=/etc/nova state=directory
-      tags: genconfig
-    - name: Generate configuration
-      script: generate-nova-config.sh {{repo_dir}} {{virtualenv_path}}
-      become: yes
-      tags: genconfig
-      when: version_release == "kilo"
-    - name: Prepare nova configuration template
-      template: src=config/nova-config.j2 dest={{nova_config_template}}
-      tags: config
-    - name: Configure nova
-      shell: crudini --merge /etc/nova/nova.conf < {{nova_config_template}}
-      become: yes
-      tags: config
-    - name: Add Nova database
-      mysql_db: name={{nova_database}} state=present login_host=controller
-                login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
-    - name: Add Nova database user
-      mysql_user: name=nova password=nova priv=*.*:ALL state=present login_host=controller
-                  login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
-    - name: Synchronize Nova database
-      command: "{{virtualenv_bin}}/nova-manage db sync"
-      become: yes
-      tags: db-sync
-    - name: Add Nova services
-      script: add-nova-service.sh {{admin_openrc_file}} {{virtualenv_path}}
-      tags: service
-    - name: Add instances state directory
-      file: path=/var/lib/nova/instances state=directory
+  roles:
+    - { role: package,  project: nova,
+        packages: [libffi-dev, libmysqlclient-dev, libpq-dev, libvirt-bin, libvirt-dev, libxml2-dev,
+                 libxslt1-dev, nbd-client, pkg-config, python-dev, python-mysqldb, qemu-kvm] }
+    - { role: repo-clone-install, project: nova }
+    - { role: config, project: nova, config_files: [nova] }
+    - { role: mysql, project: "{{project}}" }
+    - { role: deprecated-service, project: nova, port: 8774, endpoint: "/v2/%(tenant_id)s",
+        type: compute }

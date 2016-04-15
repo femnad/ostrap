@@ -15,9 +15,9 @@
 - name: Create endpoints for {{project}}
   environment: "{{admin_environment}}"
   shell: "{{deprecated_keystoneclient}} endpoint-create \
-  --service-id $({{deprecated_keystoneclient}} service-list | awk '/ image / {print $2}') \
-  --publicurl http://controller:{{port}} \
-  --internalurl http://controller:{{port}} \
-  --adminurl http://controller:{{port}} \
+  --service-id $({{deprecated_keystoneclient}} service-list | awk '/ {{type}} / {print $2}') \
+  --publicurl http://controller:{{port}}{{endpoint}} \
+  --internalurl http://controller:{{port}}{{endpoint}} \
+  --adminurl http://controller:{{port}}{{endpoint}} \
   --region {{region}}"
   tags: service-endpoint
