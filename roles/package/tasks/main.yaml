@@ -5,3 +5,7 @@
   when: ansible_os_family == "Debian"
   become: yes
   tags: reqs
+- name: Install Python requirements for {{project}}
+  pip: name={{item}} virtualenv={{virtualenv_path}}
+  with_items: "{{pip_packages}}"
+  tags: reqs-pip
