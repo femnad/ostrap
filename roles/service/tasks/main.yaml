@@ -10,7 +10,7 @@
 - name: Create service for {{project}}
   environment: "{{admin_environment}}"
   command: "{{openstackclient_bin}} service create --name {{project}} \
-            --description {{description}} {{type}}"
+            --description '{{description}}' {{type}}"
   tags: service-create
 - name: Create endpoints for {{project}}
   environment: "{{admin_environment}}"

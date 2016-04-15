@@ -26,6 +26,8 @@ type_drivers: "local,flat,vlan,vxlan"
 # Python package versions
 mysql_python_version: 1.2.5
 openstackclient_version: 1.0.4
+libvirt_version: 1.2.12
+python_memcached_version: 1.48
 
 deprecated_keystoneclient: "{{virtualenv_bin}}/keystone"
 
