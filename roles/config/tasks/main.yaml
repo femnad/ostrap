@@ -3,8 +3,9 @@
   command: tox -egenconfig chdir={{base_clone_path}}/{{project}}
   tags: genconfig
 - name: Save {{project}} config updates
-  template: src="{{project}}-config-template.j2" dest={{config_template_base}}/{{project}}.conf.tmp
+  template: src="{{item}}-config-template.j2" dest={{config_template_base}}/{{item}}.conf.tmp
   tags: config-update
+  with_items: "{{config_files}}"
 - name: Create config directory
   file: path=/etc/{{project}} state=directory
   tags: config-init
@@ -21,6 +22,7 @@
     - policy.json
   become: yes
 - name: Merge {{project}} config updates
-  shell: crudini --merge /etc/{{project}}/{{project}}.conf < {{config_template_base}}/{{project}}.conf.tmp
+  shell: crudini --merge /etc/{{project}}/{{item}}.conf < {{config_template_base}}/{{item}}.conf.tmp
   tags: config-merge
+  with_items: "{{config_files}}"
   become: yes

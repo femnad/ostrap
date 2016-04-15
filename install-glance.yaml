@@ -5,7 +5,7 @@
     - paths.yaml
   roles:
     - { role: repo-clone-install, project: glance }
-    - { role: config, project: glance }
+    - { role: config, project: glance, config_files: [glance-api, glance-registry] }
     - { role: mysql, project: glance }
     - { role: deprecated-service, project: glance, port: 9292,
     description: "OpenStack Image Service", type: image }
