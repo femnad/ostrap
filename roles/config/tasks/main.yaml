@@ -1,8 +1,4 @@
 ---
-- name: Generate {{project}} configuration template
-  command: tox -egenconfig chdir={{base_clone_path}}/{{project}}
-  tags: genconfig
-  when: not (project == "keystone")
 - name: Purge old {{project}} configuration files
   file: path=/etc/{{project}} state=absent
   become: yes
@@ -18,8 +14,14 @@
   become: yes
 - name: Copy {{project}} API and policy configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
+  become: yes
   tags: config-rest
   with_items:
     - "{{api_paste_file}}"
     - "{{policy_file}}"
+- name: Copy additional configuration files for {{project}}
+  command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
+  with_items:
+    extra_config | default([])
   become: yes
+  tags: config-extra

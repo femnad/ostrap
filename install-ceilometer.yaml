@@ -4,52 +4,17 @@
     - environment.yaml
     - paths.yaml
   vars:
-    - repo_dir: "{{base_clone_path}}/ceilometer"
-    - config_template: "{{config_template_base}}/ceilometer.conf.temp"
-  pre_tasks:
-    - name: Install requirements with apt
-      apt: name={{item}} state=latest
-      become: yes
-      with_items:
-        - mongodb-server
-        - mongodb-clients
-      when: ansible_os_family == "Debian"
-      tags: reqs
-  tasks:
-    - name: Clone ceilometer repository
-      git: repo=git://git.openstack.org/openstack/ceilometer dest={{repo_dir}}
-           version={{version_branch}} accept_hostkey=yes
-      tags: clone
-    - name: Install ceilometer
-      script: install-component.sh {{repo_dir}} {{virtualenv_path}}
-      tags: install
-    - name: Initialize MongoDB
-      script: init-ceilometer-db.sh {{ceilometer_database}}
-      tags: db-init
-    - name: Add services
-      script: add-ceilometer-service.sh {{admin_openrc_file}} {{virtualenv_activator}}
-      tags: services
-    - name: Generate Ceilometer configuration
-      script: ceilometer-genconfig.sh {{repo_dir}}
-      become: yes
-      tags: genconfig
-    - name: Prepare ceilometer configuration
-      template: src=config/ceilometer-config.j2 dest={{config_template}}
-      tags: config
-    - name: Configure ceilometer
-      shell: crudini --merge /etc/ceilometer/ceilometer.conf < {{config_template}}
-      become: yes
-      tags: config
-    - name: Configure nova
-      ini_file: dest=/etc/nova/nova.conf section=DEFAULT option=item.key value=item.value
-      with_dict:
-        instance_usage_audit: True
-        instance_usage_audit_period: hour
-        notify_on_state_change: vm_and_task_state
-        notification_driver: messagingv2
-      become: yes
-      tags: config-nova
-    - name: Create log dir
-      file: path=/var/log/ceilometer state=directory
-      become: yes
-      tags: config
+    pip_packages:
+      pymongo:
+        2.6.3,
+  roles:
+    - { role: package, project: ceilometer, packages: [mongodb-server, mongodb-clients],
+        pip_packages: "{{pip_packages}}", tags: [reqs] }
+    - { role: clone, project: ceilometer }
+    - { role: install, project: ceilometer, tags: [install] }
+    - { role: config, project: ceilometer, config_files: [ceilometer],
+        api_paste_file: "api_paste.ini", extra_config: [pipeline.yaml],
+        tags: [config]}
+    - { role: mongodb, tags: [db]}
+    - { role: service, project: ceilometer, port: 8777, type: metering,
+        description: "Telemetry", tags: service }

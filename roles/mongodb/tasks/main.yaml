@@ -1,0 +1,8 @@
+---
+- name: Add MongoDB user
+  shell: "mongo --host {{controller_host}} --eval '
+  db = db.getSiblingDB(\"{{ceilometer_database}}\");
+  db.addUser({user: \"ceilometer\",
+              pwd: \"ceilometer\",
+              roles: [ \"readWrite\", \"dbAdmin\" ]});'"
+  tags: db-mongo
