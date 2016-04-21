@@ -6,6 +6,8 @@
           "{{libvirt_version}}"
         python-memcached:
           "{{python_memcached_version}}"
+        MySQL-python:
+          "{{mysql_python_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
@@ -13,7 +15,7 @@
     - { role: package,  project: nova,
         packages: [libffi-dev, libmysqlclient-dev, libpq-dev, libvirt-bin, libvirt-dev, libxml2-dev,
                  libxslt1-dev, nbd-client, pkg-config, python-dev, python-mysqldb, qemu-kvm],
-        pip_packages: "{{pip_packages}}" }
+        pip_packages: "{{pip_packages}}", tags: reqs }
     - { role: clone, project: nova, tags: clone }
     - { role: install, project: nova, tags: install }
     - { role: config, project: nova, config_files: [nova], tags: config }
