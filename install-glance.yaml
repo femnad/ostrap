@@ -12,4 +12,4 @@
         tags: config}
     - { role: mysql, project: glance }
     - { role: service, project: glance, port: 9292,
-        description: "OpenStack Image Service", type: image }
+        description: "OpenStack Image Service", type: image, tags: service }
