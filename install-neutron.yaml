@@ -1,94 +1,20 @@
 ---
 - hosts: all
+  vars:
+    - pip_packages:
+        MySQL-python:
+          "{{mysql_python_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
-  vars:
-    - repo_dir: "{{base_clone_path}}/neutron"
-    - config_template_base: "/tmp/neutron_config_"
-    - neutron_config_template: "{{config_template_base}}neutron"
-    - ml2_config_template: "{{config_template_base}}ml2_config"
-    - l3_config_template: "{{config_template_base}}l3_agent"
-    - dhcp_config_template: "{{config_template_base}}dhcp_agent"
-    - metadata_config_template: "{{config_template_base}}metadata_config"
-  pre_tasks:
-    - name: Install requirements with apt
-      apt: name={{item}} state=installed
-      with_items:
-        - openvswitch-switch
-      tags: reqs
-      become: yes
-    - name: Install MySQL-Python
-      pip: name=MySql-python virtualenv={{virtualenv_path}}
-      tags: db-sync
-    - name: Create database
-      mysql_db: name={{neutron_database}} state=present
-                login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
-    - name: Create database user
-      mysql_user: name=neutron password=neutron priv=*.*:ALL state=present
-                  login_user={{db_user}} login_password={{db_password}}
-      tags: db-init
-  tasks:
-    - name: Clone neutron repository
-      git: repo=git://git.openstack.org/openstack/neutron dest={{repo_dir}}
-           version={{version_branch}} accept_hostkey=yes
-      tags: clone
-    - name: Install Neutron
-      script: install-component.sh {{repo_dir}} {{virtualenv_path}}
-      tags: install
-    - name: Generate Neutron configuration
-      script: copy-neutron-config.sh {{repo_dir}}
-      become: yes
-      tags: genconfig
-    - name: Prepare Neutron configuration template
-      template: src=config/neutron-config.j2 dest={{neutron_config_template}}
-      tags: config
-    - name: Configure Neutron
-      shell: crudini --merge /etc/neutron/neutron.conf < {{neutron_config_template}}
-      become: yes
-      tags: config
-    - name: Prepare Neutron ML2 configuration
-      template: src=config/neutron-ml2-config.j2 dest={{ml2_config_template}}
-      tags: config-ml2
-    - name: Configure Neutron ML2
-      shell: crudini --merge /etc/neutron/plugins/ml2/ml2_conf.ini < {{ml2_config_template}}
-      tags: config-ml2
-      become: yes
-    - name: Prepare Neutron L3 agent configuration template
-      template: src=config/neutron-l3-config.j2 dest={{l3_config_template}}
-      tags: config-l3
-    - name: Configure Neutron L3 agent
-      shell: crudini --merge /etc/neutron/l3_agent.ini < {{l3_config_template}}
-      become: yes
-      tags: config-l3
-    - name: Prepare Neutron DHCP agent configuration template
-      template: src=config/neutron-dhcp-config.j2 dest={{dhcp_config_template}}
-      tags: config-dhcp
-    - name: Configure Neutron DHCP agent
-      shell: crudini --merge /etc/neutron/dhcp_agent.ini < {{dhcp_config_template}}
-      become: yes
-      tags: config-dhcp
-    - name: Prepare Neutron metadata agent configuration template
-      template: src=config/neutron-metadata-config.j2 dest={{metadata_config_template}}
-      tags: config-metadata
-    - name: Configure Neutron metadata agent
-      shell: crudini --merge /etc/neutron/metadata_agent.ini < {{metadata_config_template}}
-      become: yes
-      tags: config-dhcp
-    - name: Create log dir
-      file: name=/var/log/neutron state=directory
-      become: yes
-      tags: config
-    - name: Synchronize database
-      command: "{{virtualenv_python}} {{virtualenv_bin}}/neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini upgrade head"
-      tags: db-sync
-    - name: Add neutron services
-      script: add-neutron-service.sh {{admin_openrc_file}} {{virtualenv_activator}}
-      tags: service
-    - name: Create neutron log directory
-      file: name=/var/log/neutron state=directory
-    - name: Edit sysctl file
-      script: edit-sysctl.sh
-      become: yes
-      tags: sysctl
+  roles:
+    - { role: package,  project: neutron, pip_packages: "{{pip_packages}}",
+        tags: reqs }
+    - { role: clone, project: neutron, tags: clone }
+    - { role: install, project: neutron, tags: install }
+    - { role: config, project: neutron, config_files: [neutron],
+        sample_config_dir: "{{base_clone_path}}/neutron/etc", tags: config }
+    - { role: mysql, project: neutron, manage_command: neutron-db-manage,
+        sync_command: "upgrade head", tags: database }
+    - { role: service, project: neutron, port: 9696, type: network,
+        description: "OpenStack Networking", tags: service }
