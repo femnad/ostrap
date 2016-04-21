@@ -10,10 +10,10 @@
   roles:
     - { role: package, project: ceilometer, packages: [mongodb-server, mongodb-clients],
         pip_packages: "{{pip_packages}}", tags: [reqs] }
-    - { role: clone, project: ceilometer }
+    - { role: clone, project: ceilometer, tags: clone }
     - { role: install, project: ceilometer, tags: [install] }
     - { role: config, project: ceilometer, config_files: [ceilometer],
-        api_paste_file: "api_paste.ini", extra_config: [pipeline.yaml],
+        api_paste_files: [api_paste.ini], extra_config: [pipeline.yaml],
         tags: [config]}
     - { role: mongodb, tags: [db]}
     - { role: service, project: ceilometer, port: 8777, type: metering,
