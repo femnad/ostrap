@@ -6,7 +6,10 @@
   roles:
     - { role: clone, project: glance }
     - { role: install, project: glance }
-    - { role: config, project: glance, config_files: [glance-api, glance-registry] }
+    - { role: config, project: glance, config_files: [glance-api, glance-registry],
+        api_paste_files: [glance-api-paste.ini, glance-registry-paste.ini],
+        sample_config_dir: "{{base_clone_path}}/{{project}}/etc/",
+        tags: config}
     - { role: mysql, project: glance }
     - { role: service, project: glance, port: 9292,
         description: "OpenStack Image Service", type: image }

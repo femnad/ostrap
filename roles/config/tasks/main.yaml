@@ -12,13 +12,18 @@
   tags: config-save
   with_items: "{{config_files}}"
   become: yes
-- name: Copy {{project}} API and policy configs
+- name: Copy {{project}} API configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes
-  tags: config-rest
+  tags: config-api
   with_items:
-    - "{{api_paste_file}}"
-    - "{{policy_file}}"
+    api_paste_files
+- name: Copy {{project}} policy configs
+  command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
+  become: yes
+  tags: config-policy
+  with_items:
+    policy_files
 - name: Copy additional configuration files for {{project}}
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   with_items:
