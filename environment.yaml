@@ -1,8 +1,8 @@
 ---
 repo_base: git://git.openstack.org/openstack
 
-version_release: kilo
-version_branch: stable/kilo
+version_release: mitaka
+version_branch: "stable/{{version_release}}"
 
 clone_path_prefix: "z/gl"
 virtualenv_prefix: "y/virtualenvs/osvenv/{{version_release}}"

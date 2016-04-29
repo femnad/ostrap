@@ -1,20 +1,8 @@
 ---
 - hosts: all
   vars_files:
+    - environment.yaml
     - paths.yaml
-  vars:
-    - repo_path: "{{base_clone_path}}/horizon"
-  pre_tasks:
-    - name: Install requirements with apt
-      apt: name={{item}} state=latest update_cache=yes
-      with_items:
-        - memcached
-      become: yes
-      tags: reqs
-  tasks:
-    - name: Clone horizon repository
-      git: repo=git://git.openstack.org/openstack/horizon dest={{repo_path}} accept_hostkey=True version=stable/kilo
-      tags: clone
-    - name: Install horizon
-      script: install-component.sh "{{repo_path}}" "{{virtualenv_activator}}"
-      tags: install
+  roles:
+    - { role: clone, project: horizon, tags: clone }
+    - { role: install, project: horizon, tags: install }
