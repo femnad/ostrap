@@ -14,8 +14,8 @@
     - { role: install, project: ceilometer, tags: [install] }
     - { role: config, project: ceilometer, config_files: [ceilometer],
         api_paste_files: [api_paste.ini],
-        extra_config: [event_definitions.yaml, event_pipeline.yaml, pipeline.yaml],
+        extra_config: [event_definitions.yaml, pipeline.yaml],
         tags: [config]}
-    - { role: mongodb, tags: [db]}
-    - { role: service, project: ceilometer, port: 8777, type: metering,
+    - { role: mongodb, tags: [database] }
+    - { role: deprecated-service, project: ceilometer, port: 8777, type: metering,
         description: "Telemetry", tags: service }

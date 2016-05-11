@@ -14,7 +14,8 @@
     - { role: install, project: neutron, tags: install }
     - { role: config, project: neutron, config_files: [neutron],
         sample_config_dir: "{{base_clone_path}}/neutron/etc", tags: config }
-    - { role: mysql, project: neutron, manage_command: neutron-db-manage,
+    - { role: mysql, project: neutron,
+        manage_command: "neutron-db-manage --config-file /etc/neutron/neutron.conf",
         sync_command: "upgrade head", tags: database }
-    - { role: service, project: neutron, port: 9696, type: network,
+    - { role: deprecated-service, project: neutron, port: 9696, type: network,
         description: "OpenStack Networking", tags: service }

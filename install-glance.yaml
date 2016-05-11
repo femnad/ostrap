@@ -11,5 +11,5 @@
         sample_config_dir: "{{base_clone_path}}/{{project}}/etc/",
         tags: config}
     - { role: mysql, project: glance }
-    - { role: service, project: glance, port: 9292,
+    - { role: deprecated-service, project: glance, port: 9292,
         description: "OpenStack Image Service", type: image, tags: service }
