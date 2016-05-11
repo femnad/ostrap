@@ -1,7 +1,7 @@
 ---
 repo_base: git://git.openstack.org/openstack
 
-version_release: mitaka
+version_release: kilo
 version_branch: "stable/{{version_release}}"
 
 clone_path_prefix: "z/gl"
