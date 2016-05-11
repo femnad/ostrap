@@ -20,6 +20,11 @@
             --adminurl http://{{controller_host}}:{{port}}/{{endpoint}} \
             --region {{region}} {{type}}"
   tags: service-endpoint
+- name: Create the heat stack user role
+  command: "{{openstackclient_bin}} role create heat_stack_user"
+  environment: "{{admin_environment}}"
+  when: project == "heat"
+  tags: heat-stack-user
 - name: Create heat domain
   command: "{{virtualenv_bin}}/heat-keystone-setup-domain \
             --stack-user-domain-name heat_user_domain \
