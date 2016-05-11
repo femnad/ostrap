@@ -11,12 +11,12 @@
     - paths.yaml
   roles:
     - { role: package, project: keystone, packages: [git, mariadb-server, memcached,
-    libffi-dev, libssl-dev, libmariadbclient-dev, python-dev, python-virtualenv,
-    rabbitmq-server], pip_packages: "{{pip_packages}}", tags: [reqs]}
-    - { role: clone }
+        libffi-dev, libssl-dev, libmariadbclient-dev, python-dev, python-virtualenv,
+        rabbitmq-server], pip_packages: "{{pip_packages}}", tags: [reqs] }
+    - { role: clone, project: keystone, tags: clone }
     - { role: install, project: keystone, tags: [install] }
     - { role: config, project: keystone, config_files: [keystone],
-    sample_config_dir: "{{base_clone_path}}/keystone/etc",
-    api_paste_file: "keystone-paste.ini", tags: [config] }
+        sample_config_dir: "{{base_clone_path}}/keystone/etc",
+        api_paste_files: [keystone-paste.ini], tags: [config] }
     - { role: mysql, project: keystone, tags: [database] }
-    - { role: bootstrap, tags: [service]}
+    - { role: bootstrap, tags: [service] }
