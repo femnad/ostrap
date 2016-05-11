@@ -6,8 +6,7 @@
   roles:
     - { role: clone, project: heat }
     - { role: install, project: heat, tags: install }
-    - { role: mysql, project: heat, tags: database }
-    - { role: service, project: heat, description: Orchestration, port: 8004,
-        endpoint: "v1/%(tenant_id)s", type: orchestration, tags: service }
     - { role: config, project: heat, config_files: [heat], tags: config }
-
+    - { role: mysql, project: heat, tags: database }
+    - { role: deprecated-service, project: heat, description: Orchestration, port: 8004,
+        endpoint: "/v1/%\\(tenant_id\\)s", type: orchestration, tags: service }
