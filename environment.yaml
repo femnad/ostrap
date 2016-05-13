@@ -8,6 +8,7 @@ clone_path_prefix: "z/gl"
 virtualenv_prefix: "y/virtualenvs/osvenv/{{version_release}}"
 
 ceilometer_database: "{{ version_release}}_ceilometer"
+cinder_database: "{{ version_release}}_cinder"
 glance_database: "{{ version_release }}_glance"
 heat_database: "{{ version_release }}_heat"
 keystone_database: "{{ version_release }}_keystone"
