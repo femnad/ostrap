@@ -17,16 +17,16 @@
   become: yes
   tags: config-api
   with_items:
-    api_paste_files
+    "{{api_paste_files}}"
 - name: Copy {{project}} policy configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes
   tags: config-policy
   with_items:
-    policy_files
+    "{{policy_files}}"
 - name: Copy additional configuration files for {{project}}
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   with_items:
-    extra_config | default([])
+    "{{extra_config | default([])}}"
   become: yes
   tags: config-extra
