@@ -6,6 +6,8 @@
           "{{openstackclient_version}}"
         MySQL-python:
           "{{mysql_python_version}}"
+        python-memcached:
+          "{{python_memcached_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
