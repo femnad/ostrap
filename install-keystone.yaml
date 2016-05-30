@@ -1,7 +1,7 @@
 ---
 - hosts: all
   vars:
-    - pip_packages:
+    - keystone_pip_packages:
         python-openstackclient:
           "{{openstackclient_version}}"
         MySQL-python:
@@ -12,7 +12,7 @@
   roles:
     - { role: package, project: keystone, packages: [git, mariadb-server, memcached,
         libffi-dev, libssl-dev, libmariadbclient-dev, python-dev, python-virtualenv,
-        rabbitmq-server], pip_packages: "{{pip_packages}}", tags: [reqs] }
+        rabbitmq-server], pip_packages: "{{keystone_pip_packages}}", tags: [reqs] }
     - { role: clone, project: keystone, tags: clone }
     - { role: install, project: keystone, tags: [install] }
     - { role: config, project: keystone, config_files: [keystone],

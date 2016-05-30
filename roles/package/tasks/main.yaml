@@ -7,5 +7,5 @@
   tags: reqs
 - name: Install Python requirements for {{project}}
   pip: name={{item.key}} version={{item.value}} virtualenv={{virtualenv_path}}
-  with_dict: pip_packages | default({})
+  with_dict: "{{pip_packages | default({})}}"
   tags: reqs-pip
