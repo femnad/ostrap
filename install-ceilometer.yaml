@@ -4,12 +4,12 @@
     - environment.yaml
     - paths.yaml
   vars:
-    pip_packages:
+    ceilometer_pip_packages:
       pymongo:
         2.6.3,
   roles:
     - { role: package, project: ceilometer, packages: [mongodb-server, mongodb-clients],
-        pip_packages: "{{pip_packages}}", tags: [reqs] }
+        pip_packages: "{{ceilometer_pip_packages}}", tags: [reqs] }
     - { role: clone, project: ceilometer, tags: clone }
     - { role: install, project: ceilometer, tags: [install] }
     - { role: config, project: ceilometer, config_files: [ceilometer],
