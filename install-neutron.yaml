@@ -1,14 +1,14 @@
 ---
 - hosts: all
   vars:
-    - pip_packages:
+    - neutron_pip_packages:
         MySQL-python:
           "{{mysql_python_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
   roles:
-    - { role: package,  project: neutron, pip_packages: "{{pip_packages}}",
+    - { role: package,  project: neutron, pip_packages: "{{neutron_pip_packages}}",
         tags: reqs }
     - { role: clone, project: neutron, tags: clone }
     - { role: install, project: neutron, tags: install }
