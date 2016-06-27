@@ -1,5 +1,11 @@
 ---
 admin_environment:
+  OS_PROJECT_DOMAIN_NAME:
+    default
+  OS_USER_DOMAIN_NAME:
+    default
+  OS_PROJECT_NAME:
+    admin
   OS_TENANT_NAME:
     admin
   OS_USERNAME:
@@ -7,4 +13,8 @@ admin_environment:
   OS_PASSWORD:
     "{{admin_password}}"
   OS_AUTH_URL:
-    http://{{controller_host}}:35357/v2.0
+    http://{{controller_host}}:35357/v3
+  OS_IDENTITY_API_VERSION:
+    3
+  OS_IMAGE_API_VERSION:
+    2

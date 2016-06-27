@@ -4,14 +4,7 @@ debug = True
 log_dir = /var/log/keystone
 
 [database]
-connection = mysql://keystone:keystone@controller/{{keystone_database}}
-
-[memcache]
-servers = localhost:11211
+connection = mysql+pymysql://keystone:keystone@controller/{{keystone_database}}
 
 [token]
-provider = keystone.token.providers.uuid.Provider
-driver = keystone.token.persistence.backends.memcache.Token
-
-[revoke]
-driver = keystone.contrib.revoke.backends.sql.Revoke
+provider = fernet
