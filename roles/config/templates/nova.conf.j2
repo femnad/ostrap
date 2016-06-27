@@ -13,7 +13,7 @@ state_path = /var/lib/nova
 connection = mysql+pymysql://nova:nova@controller/{{nova_api_database}}
 
 [database]
-connection = mysql://nova:nova@controller/{{nova_database}}
+connection = mysql+pymysql://nova:nova@controller/{{nova_database}}
 
 [keystone_authtoken]
 auth_uri = http://controller:5000
