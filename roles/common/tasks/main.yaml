@@ -1,0 +1,4 @@
+---
+- name: Upgrade pip
+  pip: name=pip state=latest virtualenv={{virtualenv_path}}
+  tags: pip-upgrade

@@ -8,6 +8,8 @@
           "{{mysql_python_version}}"
         python-memcached:
           "{{python_memcached_version}}"
+        pytz:
+          "{{pytz_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
