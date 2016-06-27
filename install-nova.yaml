@@ -6,8 +6,6 @@
           "{{libvirt_version}}"
         python-memcached:
           "{{python_memcached_version}}"
-        pymysql:
-          "{{pymysql_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
@@ -18,7 +16,9 @@
         pip_packages: "{{nova_pip_packages}}", tags: reqs }
     - { role: clone, project: nova, tags: clone }
     - { role: install, project: nova, tags: install }
-    - { role: config, project: nova, config_files: [nova], tags: config }
+    - { role: config, project: nova, config_files: [nova.conf],
+        sample_config_dir: "{{base_clone_path}}/{{project}}/etc/{{project}}",
+        tags: config }
     - { role: mysql, project: nova, sync_command: "db sync", tags: database }
     - { role: mysql, project: nova_api, sync_command: "api_db sync",
         manage_command: "nova-manage", tags: [database,database-nova-api] }

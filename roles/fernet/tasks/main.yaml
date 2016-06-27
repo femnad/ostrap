@@ -1,0 +1,16 @@
+- name: Add keystone Unix user group
+  group: name=keystone state=present
+  become: yes
+  tags: fernet-unix-user
+- name: Add keystone Unix user
+  user: name=keystone group=keystone
+  become: yes
+  tags: fernet-unix-group
+- name: Initialize Fernet key repository
+  file: path=/etc/keystone/fernet-keys state=directory owner=keystone group=keystone mode=0700
+  become: yes
+  tags: fernet-key-dir
+- name: Initialize Fernet tokens
+  command: "{{virtualenv_bin}}/keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone"
+  become: yes
+  tags: fernet-key-setup

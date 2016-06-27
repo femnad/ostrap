@@ -14,7 +14,6 @@
     - { role: install, project: neutron, tags: install }
     - { role: config, project: neutron,
         config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini],
-        sample_config_dir: "{{base_clone_path}}/{{project}}/etc",
         tags: config }
     - { role: mysql, project: neutron, manage_command: neutron-db-manage,
         sync_command: "upgrade head", tags: database }
