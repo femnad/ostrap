@@ -3,4 +3,6 @@ admin_bootstrap_environment:
   OS_TOKEN:
     "{{admin_token}}"
   OS_URL:
-    http://{{controller_host}}:35357/v2.0
+    http://{{controller_host}}:35357/v3
+  OS_IDENTITY_API_VERSION:
+    3
