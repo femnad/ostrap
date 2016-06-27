@@ -10,6 +10,6 @@
         api_paste_files: [glance-api-paste.ini, glance-registry-paste.ini],
         sample_config_dir: "{{base_clone_path}}/{{project}}/etc/",
         tags: config}
-    - { role: mysql, project: glance }
+    - { role: mysql, project: glance, tags: database }
     - { role: service, project: glance, port: 9292,
         description: "OpenStack Image Service", type: image, tags: service }
