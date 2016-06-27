@@ -1,19 +1,21 @@
 ---
 - hosts: all
-  vars:
-    - neutron_pip_packages:
-        MySQL-python:
-          "{{mysql_python_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
+  vars:
+    ml2_plugins:
+      ml2:
+        plugins/ml2/ml2_conf.ini
+      linuxbridge:
+        plugins/ml2/linuxbridge_agent.ini
   roles:
-    - { role: package,  project: neutron, pip_packages: "{{neutron_pip_packages}}",
-        tags: reqs }
     - { role: clone, project: neutron, tags: clone }
     - { role: install, project: neutron, tags: install }
-    - { role: config, project: neutron, config_files: [neutron],
-        sample_config_dir: "{{base_clone_path}}/neutron/etc", tags: config }
+    - { role: config, project: neutron,
+        config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini],
+        sample_config_dir: "{{base_clone_path}}/{{project}}/etc",
+        tags: config }
     - { role: mysql, project: neutron, manage_command: neutron-db-manage,
         sync_command: "upgrade head", tags: database }
     - { role: service, project: neutron, port: 9696, type: network,

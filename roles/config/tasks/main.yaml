@@ -8,10 +8,21 @@
   tags: config-init
   become: yes
 - name: Configure {{project}}
-  template: src="{{item}}-config-template.j2" dest=/etc/{{project}}/{{item}}.conf
+  template: src="{{item}}.j2" dest=/etc/{{project}}/{{item}}
   tags: config-save
   with_items: "{{config_files}}"
   become: yes
+- name: Create ml plugins config directory
+  file: path=/etc/neutron/plugins/ml2 state=directory
+  tags: config-ml2
+  when: project == "neutron"
+  become: yes
+- name: Configure {{project}}
+  template: src="{{project}}-{{item.key}}-config-template.j2" dest=/etc/{{project}}/{{item.value}}
+  with_dict: "{{ml2_plugins | default({})}}"
+  become: yes
+  when: project == "neutron"
+  tags: config-ml2
 - name: Copy {{project}} API configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes

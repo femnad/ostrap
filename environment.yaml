@@ -14,26 +14,31 @@ heat_database: "{{ version_release }}_heat"
 keystone_database: "{{ version_release }}_keystone"
 neutron_database: "{{ version_release }}_neutron"
 nova_database: "{{ version_release }}_nova"
+nova_api_database: "{{ version_release }}_nova_api"
 
+# Nova configuration
 compute_driver: libvirt.LibvirtDriver
-linuxnet_interface_driver: LinuxBridgeInterfaceDriver
 
-firewall_driver: IptablesFirewallDriver
-l3_interface_driver: BridgeInterfaceDriver
+# Neutron configuration
 ml2_mechanism_driver: linuxbridge
-tenant_network_types: "vlan,vxlan"
-type_drivers: "local,flat,vlan,vxlan"
+type_drivers: "flat,vlan"
+physical_network_interface: em1
+l3_interface_driver: BridgeInterfaceDriver
 
 # Python package versions
-pymysql_version: 0.7.4
 openstackclient_version: 2.1.0
 libvirt_version: 1.3.1
 python_memcached_version: 1.58
 pytz_version: 2016.4
 
+common_pip_packages:
+  pymysql:
+    0.7.4
+
 deprecated_keystoneclient: "{{virtualenv_bin}}/keystone"
 
 controller_host: controller
+controller_ip: 192.168.88.125
 
 region: RegionOne
 

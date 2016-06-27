@@ -6,8 +6,8 @@
           "{{libvirt_version}}"
         python-memcached:
           "{{python_memcached_version}}"
-        MySQL-python:
-          "{{mysql_python_version}}"
+        pymysql:
+          "{{pymysql_version}}"
   vars_files:
     - environment.yaml
     - paths.yaml
@@ -20,5 +20,7 @@
     - { role: install, project: nova, tags: install }
     - { role: config, project: nova, config_files: [nova], tags: config }
     - { role: mysql, project: nova, sync_command: "db sync", tags: database }
-    - { role: service, project: nova, port: 8774, endpoint: "/v2/%\\(tenant_id\\)s",
+    - { role: mysql, project: nova_api, sync_command: "api_db sync",
+        manage_command: "nova-manage", tags: [database,database-nova-api] }
+    - { role: service, project: nova, port: 8774, endpoint: "/v2.1/%\\(tenant_id\\)s",
         type: compute, description: "OpenStack Compute", tags: service }
