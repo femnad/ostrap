@@ -3,7 +3,7 @@ debug = True
 log_dir = /var/log/glance
 
 [database]
-connection = mysql+pymysql://glance:glance@controller/{{glance_database}}
+connection = mysql{% if version_release != "kilo" %}+pymysql{% endif %}://keystone:keystone@controller/{{keystone_database}}
 
 [keystone_authtoken]
 auth_uri = http://controller:5000

@@ -10,7 +10,7 @@ log_dir = /var/log/neutron/
 state_path = /var/lib/neutron/
 
 [database]
-connection = mysql+pymysql://neutron:neutron@controller/{{neutron_database}}
+connection = mysql{% if version_release != "kilo" %}+pymysql{% endif %}://keystone:keystone@controller/{{keystone_database}}
 
 [oslo_messaging_rabbit]
 rabbit_host = controller
