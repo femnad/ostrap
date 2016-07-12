@@ -1,0 +1,20 @@
+- hosts: all
+
+  vars_files:
+    - environment.yaml
+    - paths.yaml
+
+  vars:
+    project:
+      aodh
+
+  roles:
+    - { role: clone, tags: clone }
+    - { role: install, tags: [install] }
+    - { role: config, config_files: [aodh.conf],
+        api_paste_files: [api_paste.ini],
+        sample_config_dir: "{{base_clone_path}}/{{project}}/etc/{{project}}",
+        tags: [config] }
+    - { role: mysql, sync: no, tags: [database] }
+    - { role: service, port: 8042, type: alarming, description: "Telemetry",
+        tags: service }

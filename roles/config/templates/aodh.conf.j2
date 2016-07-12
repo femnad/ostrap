@@ -1,0 +1,30 @@
+[DEFAULT]
+rpc_backend = rabbit
+auth_strategy = keystone
+
+[oslo_messaging_rabbit]
+rabbit_host = controller
+rabbit_userid = {{ rabbitmq_user }}
+rabbit_password = {{ rabbitmq_password }}
+
+[keystone_authtoken]
+auth_uri = http://controller:5000
+auth_url = http://controller:35357
+memcached_servers = controller:11211
+auth_type = password
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = aodh
+password = aodh
+
+[service_credentials]
+auth_type = password
+auth_url = http://controller:5000/v3
+project_domain_name = default
+user_domain_name = default
+project_name = service
+username = aodh
+password = aodh
+interface = internalURL
+region_name = RegionOne

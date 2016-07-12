@@ -17,4 +17,5 @@
 - name: Synchronize {{project}} database
   command: "{{virtualenv_bin}}/{{manage_command}} {{sync_command}}"
   become: yes
+  when: sync
   tags: db-sync

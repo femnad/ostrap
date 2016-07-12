@@ -6,16 +6,19 @@
   vars:
     ceilometer_pip_packages:
       pymongo:
-        2.6.3,
+        2.6.3
   roles:
     - { role: package, project: ceilometer, packages: [mongodb-server, mongodb-clients],
         pip_packages: "{{ceilometer_pip_packages}}", tags: [reqs] }
     - { role: clone, project: ceilometer, tags: clone }
     - { role: install, project: ceilometer, tags: [install] }
-    - { role: config, project: ceilometer, config_files: [ceilometer],
+    - { role: config, project: ceilometer, config_files: [ceilometer.conf],
         api_paste_files: [api_paste.ini],
         extra_config: [event_definitions.yaml, event_pipeline.yaml, pipeline.yaml],
+        sample_config_dir: "{{base_clone_path}}/{{project}}/etc/{{project}}",
         tags: [config] }
     - { role: mongodb, tags: [database] }
     - { role: service, project: ceilometer, port: 8777, type: metering,
         description: "Telemetry", tags: service }
+    - { role: service, project: aodh, port: 8042, type: alarming,
+        description: "Telemetry", tags: alarm-service }
