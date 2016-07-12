@@ -41,3 +41,7 @@
     "{{extra_config | default([])}}"
   become: yes
   tags: config-extra
+- name: Initialize log directory
+  file: path=/var/log/{{ project }} state=directory
+  become: yes
+  tags: config, config-log-dir

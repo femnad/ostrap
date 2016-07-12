@@ -3,5 +3,3 @@ manage_command:
   "{{project}}-manage"
 sync_command:
   db_sync
-sync:
-  false
