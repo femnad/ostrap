@@ -6,7 +6,7 @@
   vars:
     ceilometer_pip_packages:
       pymongo:
-        2.6.3
+        3.0.2
   roles:
     - { role: package, project: ceilometer, packages: [mongodb-server, mongodb-clients],
         pip_packages: "{{ceilometer_pip_packages}}", tags: [reqs] }
