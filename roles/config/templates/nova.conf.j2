@@ -10,6 +10,10 @@ use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
 compute_driver = {{compute_driver}}
 state_path = /var/lib/nova
+instance_usage_audit = True
+instance_usage_audit_period = hour
+notify_on_state_change = vm_and_task_state
+notification_driver = messagingv2
 {% if version_release != "kilo" %}
 
 [api_database]
