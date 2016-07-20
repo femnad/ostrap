@@ -20,5 +20,5 @@
     - { role: mysql, project: nova, sync_command: "db sync", tags: database }
     - { role: mysql, project: nova_api, sync_command: "api_db sync",
         manage_command: "nova-manage", tags: [database,database-nova-api] }
-    - { role: service, project: nova, port: 8774, endpoint: "/v2.1/%\\(tenant_id\\)s",
+    - { role: service, project: nova, port: 8774, endpoint: "v2.1/%\\(tenant_id\\)s",
         type: compute, description: "OpenStack Compute", tags: service }
