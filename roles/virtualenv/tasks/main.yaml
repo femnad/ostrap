@@ -1,0 +1,6 @@
+---
+- name: Initialize virtualenv
+  command: virtualenv {{ virtualenv_path }}
+  args:
+    creates: "{{  virtualenv_bin }}"
+  tags: virtualenv

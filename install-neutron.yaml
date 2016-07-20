@@ -1,17 +1,24 @@
 ---
 - hosts: all
+  name: Install neutron
+
   vars_files:
     - environment.yaml
     - paths.yaml
+
   vars:
+
+    project: neutron
+
     ml2_plugins:
       ml2:
         plugins/ml2/ml2_conf.ini
       linuxbridge:
         plugins/ml2/linuxbridge_agent.ini
+
   roles:
-    - { role: clone, project: neutron, tags: clone }
-    - { role: install, project: neutron, tags: install }
+    - clone
+    - install
     - { role: config, project: neutron,
         config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini],
         tags: config }

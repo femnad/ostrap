@@ -1,0 +1,5 @@
+---
+dependencies:
+  - { role: packages, deps: "{{ _dependencies }}" }
+  - { role: mysql_admin }
+  - { role: pip, pip_deps: "{{ _pip_deps }}" }
