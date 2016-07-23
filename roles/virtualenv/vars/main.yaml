@@ -1,4 +1,4 @@
 ---
-dependencies:
+_dependencies:
   apt:
-    virtualenv
+    [libssl-dev, python-dev, virtualenv]

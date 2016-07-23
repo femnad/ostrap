@@ -1,3 +1,4 @@
 ---
 dependencies:
-  - { role: pauser, reason: "bootstrap", msg: "Start the keystone service" }
+  - { role: pauser, reason: "bootstrap", msg: "Start the keystone service",
+      tags: bootstrap }

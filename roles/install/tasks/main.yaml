@@ -4,7 +4,8 @@
   args:
     chdir: "{{base_clone_path}}/{{project}}"
   tags: install
+
 - name: Install Python dependencies for {{project}}
   pip: requirements={{base_clone_path}}/{{project}}/requirements.txt
        virtualenv={{virtualenv_path}}
-  tags: install-deps
+  tags: install, install-deps

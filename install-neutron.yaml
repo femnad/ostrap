@@ -10,6 +10,8 @@
 
     project: neutron
 
+    config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini]
+
     ml2_plugins:
       ml2:
         plugins/ml2/ml2_conf.ini
@@ -19,9 +21,7 @@
   roles:
     - clone
     - install
-    - { role: config, project: neutron,
-        config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini],
-        tags: config }
+    - config
     - { role: mysql, project: neutron, manage_command: neutron-db-manage,
         sync_command: "upgrade head", tags: database }
     - { role: service, project: neutron, port: 9696, type: network,

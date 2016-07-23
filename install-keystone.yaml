@@ -1,22 +1,31 @@
 ---
-- hosts: all
-  vars:
-    - keystone_pip_packages:
-        python-openstackclient:
-          "{{openstackclient_version}}"
-        pytz:
-          "{{pytz_version}}"
+- name: Install Keystone
+  hosts: all
+
   vars_files:
     - environment.yaml
     - paths.yaml
+
+  vars:
+
+    project:
+      keystone
+
+    config:
+      config_files: keystone.conf
+      api_paste_files: keystone-paste.ini
+
+    pip_deps:
+      python-openstackclient:
+        2.3.0
+      pytz:
+        2016.4
+
   roles:
-    - { role: package, project: keystone,
-        pip_packages: "{{keystone_pip_packages}}",
-        tags: [reqs] }
-    - { role: clone, project: keystone, tags: clone }
-    - { role: install, project: keystone, tags: [install] }
-    - { role: config, project: keystone, config_files: [keystone.conf],
-        api_paste_files: [keystone-paste.ini], tags: [config] }
-    - { role: mysql, project: keystone, tags: [database] }
-    - { role: fernet, tags: [token] }
-    - { role: bootstrap, tags: [service] }
+    - pip
+    - clone
+    - install
+    - config
+    - mysql
+    - fernet
+    - bootstrap

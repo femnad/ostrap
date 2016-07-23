@@ -1,5 +1,8 @@
 ---
 dependencies:
-  - { role: packages, deps: "{{ _dependencies }}" }
-  - { role: mysql_admin }
-  - { role: pip, pip_deps: "{{ _pip_deps }}" }
+  - { role: packages, deps: "{{ _dependencies }}",
+      tags: db }
+  - { role: hosts, tags: db }
+  - { role: mysql_admin, tags: db }
+  - { role: pip, pip_deps: "{{ _pip_deps }}",
+      tags: db }

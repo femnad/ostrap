@@ -1,0 +1,5 @@
+---
+- name: Add entry to hosts file
+  lineinfile: dest=/etc/hosts line='127.0.0.1 controller'
+  become: yes
+  tags: hosts

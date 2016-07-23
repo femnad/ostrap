@@ -1,4 +1,15 @@
 ---
+- name: Set character set to utf8
+  replace: dest=/etc/mysql/mariadb.conf.d/{{ item }} regexp=utf8mb4 replace=utf8
+  with_items:
+    - 50-mysql-clients.cnf
+    - 50-server.cnf
+    - 50-client.cnf
+  become: yes
+  tags: db, db-charset
+  notify: restart mysql
+
+
 - name: Drop {{project}} database
   mysql_db: name={{version_release}}_{{project}} state=absent
             login_host={{db_host}}

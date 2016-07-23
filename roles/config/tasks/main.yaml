@@ -2,24 +2,24 @@
 - name: Purge old {{project}} configuration files
   file: path=/etc/{{project}} state=absent
   become: yes
-  tags: config-purge
+  tags: config, config-purge
 
 - name: Create config directory
   file: path=/etc/{{project}} state=directory
-  tags: config, config-init
   become: yes
+  tags: config, config-init
 
 - name: Configure {{project}}
   template: src="{{item}}.j2" dest=/etc/{{project}}/{{item}}
-  tags: config, config-save
-  with_items: "{{config_files}}"
+  with_items: "{{ config.config_files }}"
   become: yes
+  tags: config, config-save
 
 - name: Create ml plugins config directory
   file: path=/etc/neutron/plugins/ml2 state=directory
-  tags: config, config-ml2
   when: project == "neutron"
   become: yes
+  tags: config, config-ml2
 
 - name: Configure {{project}}
   template: src="{{project}}-{{item.key}}-config-template.j2" dest=/etc/{{project}}/{{item.value}}
@@ -31,16 +31,16 @@
 - name: Copy {{project}} API configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes
-  tags: config, config-api
   with_items:
-    "{{api_paste_files}}"
+    "{{ config.api_paste_files }}"
+  tags: config, config-api
 
 - name: Copy {{project}} policy configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes
-  tags: config, config-policy
   with_items:
     "{{policy_files}}"
+  tags: config, config-policy
 
 - name: Copy additional configuration files for {{project}}
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"

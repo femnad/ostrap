@@ -1,4 +1,5 @@
 ---
 dependencies:
-  - { role: virtualenv }
-  - { role: packages, deps: "{{ _dependencies }}" }
+  - virtualenv
+  - { role: packages, deps: "{{ _dependencies }}",
+      tags: install }
