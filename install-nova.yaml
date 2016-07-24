@@ -1,24 +1,44 @@
 ---
 - hosts: all
-  vars:
-    - nova_pip_packages:
-        libvirt-python:
-          "{{libvirt_version}}"
+  name: Install Nova
+
   vars_files:
     - environment.yaml
     - paths.yaml
+
+  vars:
+
+    project:
+      nova
+
+    deps:
+      apt:
+        [libpq-dev, libvirt-bin, libvirt-dev, libxml2-dev, libxslt1-dev,
+         nbd-client, pkg-config, qemu-kvm]
+
+    pip_deps:
+      libvirt-python:
+        1.3.1
+
+    config:
+      config_files: [nova.conf]
+      config_prefix: etc/nova
+
+    service:
+      description:
+        OpenStack Compute
+      endpoint:
+        v2.1/%\(tenant_id\)s
+      port:
+        8774
+      type: compute
+
   roles:
-    - { role: package,  project: nova,
-        packages: [libpq-dev, libvirt-bin, libvirt-dev, libxml2-dev,
-                 libxslt1-dev, nbd-client, pkg-config, qemu-kvm],
-        pip_packages: "{{nova_pip_packages}}", tags: reqs }
-    - { role: clone, project: nova, tags: clone }
-    - { role: install, project: nova, tags: install }
-    - { role: config, project: nova, config_files: [nova.conf],
-        sample_config_dir: "{{base_clone_path}}/{{project}}/etc/{{project}}",
-        tags: config }
-    - { role: mysql, project: nova, sync_command: "db sync", tags: database }
+    - packages
+    - clone
+    - install
+    - config
+    - { role: mysql, project: nova, sync_command: "db sync" }
     - { role: mysql, project: nova_api, sync_command: "api_db sync",
-        manage_command: "nova-manage", tags: [database,database-nova-api] }
-    - { role: service, project: nova, port: 8774, endpoint: "v2.1/%\\(tenant_id\\)s",
-        type: compute, description: "OpenStack Compute", tags: service }
+        manage_command: "nova-manage" }
+    - service

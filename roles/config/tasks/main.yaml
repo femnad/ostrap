@@ -11,7 +11,7 @@
 
 - name: Configure {{project}}
   template: src="{{item}}.j2" dest=/etc/{{project}}/{{item}}
-  with_items: "{{ config.config_files }}"
+  with_items: "{{ _config.config_files }}"
   become: yes
   tags: config, config-save
 
@@ -32,14 +32,14 @@
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes
   with_items:
-    "{{ config.api_paste_files }}"
+    "{{ _config.api_paste_files }}"
   tags: config, config-api
 
 - name: Copy {{project}} policy configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes
   with_items:
-    "{{policy_files}}"
+    "{{ _config.policy_files }}"
   tags: config, config-policy
 
 - name: Copy additional configuration files for {{project}}

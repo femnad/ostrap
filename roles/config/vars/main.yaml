@@ -1,0 +1,16 @@
+---
+_default_config:
+  config_files:
+    []
+  config_prefix:
+    "{{ project }}/etc"
+  api_paste_files:
+    [api-paste.ini]
+  policy_files:
+    [policy.json]
+
+_config:
+  "{{ _default_config | combine(config) }}"
+
+sample_config_dir:
+  "{{ base_clone_path }}/{{ project }}/{{ _config.config_prefix }}"
