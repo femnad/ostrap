@@ -22,7 +22,6 @@ compute_driver: libvirt.LibvirtDriver
 # Neutron configuration
 ml2_mechanism_driver: linuxbridge
 type_drivers: "flat,vlan"
-physical_network_interface: em1
 l3_interface_driver: BridgeInterfaceDriver
 
 common_pip_packages:

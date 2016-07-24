@@ -15,7 +15,8 @@
         1.58
 
     config:
-      config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini]
+      config_files: [neutron.conf, dhcp_agent.ini, l3_agent.ini,
+                     metadata_agent.ini]
 
     ml2_plugins:
       ml2:
@@ -25,7 +26,7 @@
 
     db:
       manage_command:
-        neutron-db-manage
+        neutron-db-manage --config-file /etc/neutron/neutron.conf --config-file /etc/neutron/plugins/ml2/ml2_conf.ini
       sync_command:
         upgrade head
 
@@ -36,6 +37,12 @@
         9696
       type:
         network
+
+  vars_prompt:
+
+    - name: physical_network_interface
+      prompt: Physical network interface?
+      default: eth1
 
   roles:
     - pip
