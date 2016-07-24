@@ -9,7 +9,6 @@
   tags: db, db-charset
   notify: restart mysql
 
-
 - name: Drop {{project}} database
   mysql_db: name={{version_release}}_{{project}} state=absent
             login_host={{db_host}}
@@ -29,6 +28,6 @@
   tags: db, db-init
 
 - name: Synchronize {{project}} database
-  command: "{{virtualenv_bin}}/{{manage_command}} {{sync_command}}"
+  command: "{{virtualenv_bin}}/{{ _db.manage_command }} {{ _db.sync_command }}"
   become: yes
   tags: db, db-sync

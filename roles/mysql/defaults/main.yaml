@@ -5,7 +5,3 @@ _dependencies:
 _pip_deps:
   pymysql:
     0.7.5
-manage_command:
-  "{{project}}-manage"
-sync_command:
-  db_sync

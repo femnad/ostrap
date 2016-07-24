@@ -1,0 +1,8 @@
+_default_db:
+  manage_command:
+    "{{ project }}-manage"
+  sync_command:
+    db_sync
+
+_db:
+  "{{ _default_db | combine(db) }}"

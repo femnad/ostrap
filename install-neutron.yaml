@@ -10,7 +10,8 @@
 
     project: neutron
 
-    config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini]
+    config:
+      config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini]
 
     ml2_plugins:
       ml2:
@@ -18,11 +19,23 @@
       linuxbridge:
         plugins/ml2/linuxbridge_agent.ini
 
+    db:
+      manage_command:
+        neutron-db-manage
+      sync_command:
+        upgrade head
+
+    service:
+      description:
+        OpenStack Networking
+      port:
+        9696
+      type:
+        network
+
   roles:
     - clone
     - install
     - config
-    - { role: mysql, project: neutron, manage_command: neutron-db-manage,
-        sync_command: "upgrade head", tags: database }
-    - { role: service, project: neutron, port: 9696, type: network,
-        description: "OpenStack Networking", tags: service }
+    - mysql
+    - service

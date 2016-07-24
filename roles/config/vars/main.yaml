@@ -3,7 +3,7 @@ _default_config:
   config_files:
     []
   config_prefix:
-    "{{ project }}/etc"
+    "etc"
   api_paste_files:
     [api-paste.ini]
   policy_files:
