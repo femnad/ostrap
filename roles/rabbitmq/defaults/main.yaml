@@ -1,0 +1,4 @@
+---
+rabbitmq_deps:
+  apt:
+    rabbitmq-server

@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: packages, deps: "{{ rabbitmq_deps }}",
+      tags: amqp }

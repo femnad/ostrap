@@ -39,3 +39,4 @@
     - config
     - mysql
     - service
+    - rabbitmq
