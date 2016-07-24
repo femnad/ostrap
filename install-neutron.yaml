@@ -10,6 +10,10 @@
 
     project: neutron
 
+    pip_deps:
+      python-memcached:
+        1.58
+
     config:
       config_files: [neutron.conf, dhcp_agent.ini, metadata_agent.ini]
 
@@ -34,6 +38,7 @@
         network
 
   roles:
+    - pip
     - clone
     - install
     - config

@@ -29,3 +29,4 @@
     - mysql
     - fernet
     - bootstrap
+    - envrc

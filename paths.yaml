@@ -1,11 +1,13 @@
 ---
-local_user_home: "{{ ansible_env.HOME }}"
+remote_user_home: "{{ ansible_env.HOME }}"
 
-base_clone_path: "{{ local_user_home }}/{{clone_path_prefix}}/openstack/{{version_release}}"
-openrc_dir: "{{ local_user_home }}/y/os-openrc"
-admin_openrc_file: "{{ openrc_dir }}/admin-openrc.sh"
-virtualenv_path: "{{ local_user_home}}/{{ virtualenv_prefix }}"
+base_clone_path: "{{ remote_user_home }}/{{clone_path_prefix}}/openstack/{{version_release}}"
+
+openrc_dir: "{{ remote_user_home }}/w"
+admin_openrc: "{{ openrc_dir }}/admin-{{ version_release }}-openrc.fish"
+
+openstackclient_bin: "{{ virtualenv_bin }}/openstack"
+
+virtualenv_path: "{{ remote_user_home}}/{{ virtualenv_prefix }}"
 virtualenv_bin: "{{ virtualenv_path }}/bin"
 virtualenv_python: "{{ virtualenv_bin }}/python"
-openstackclient_bin: "{{ virtualenv_bin }}/openstack"
-config_template_base: "/tmp"

@@ -1,0 +1,8 @@
+---
+- name: Init openrc scripts directory
+  file: path={{ openrc_dir }} state=directory
+  tags: openrc
+
+- name: Create admin openrc script
+  template: src=admin-openrc-fish.j2 dest={{ admin_openrc }}
+  tags: openrc
