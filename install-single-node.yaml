@@ -1,0 +1,15 @@
+---
+- hosts: all
+  name: Perform single node installation
+
+- include: install-keystone.yaml
+  tags: keystone
+
+- include: install-glance.yaml
+  tags: glance
+
+- include: install-nova.yaml
+  tags: nova
+
+- include: install-neutron.yaml
+  tags: neutron

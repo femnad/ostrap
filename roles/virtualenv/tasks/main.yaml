@@ -3,4 +3,4 @@
   command: virtualenv {{ virtualenv_path }}
   args:
     creates: "{{  virtualenv_bin }}"
-  tags: virtualenv
+  tags: virtualenv, install
