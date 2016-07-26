@@ -23,7 +23,7 @@
 
 - name: Add {{project}} database user
   mysql_user: name={{project}} password={{project}} priv=*.*:ALL
-              state=present login_host={{db_host}}
+              state=present host=controller login_host={{db_host}}
               login_user={{db_user}} login_password={{db_password}}
   tags: db, db-init
 
