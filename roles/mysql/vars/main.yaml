@@ -1,4 +1,6 @@
 _default_db:
+  name:
+    "{{ project }}"
   manage_command:
     "{{ project }}-manage"
   sync_command:

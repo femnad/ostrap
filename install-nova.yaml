@@ -38,6 +38,8 @@
         db sync
 
     nova_api_db:
+      name:
+        nova_api
       sync_command:
         api_db sync
 

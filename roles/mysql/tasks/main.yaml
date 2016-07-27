@@ -9,20 +9,20 @@
   tags: db, db-charset
   notify: restart mysql
 
-- name: Drop {{project}} database
-  mysql_db: name={{version_release}}_{{project}} state=absent
+- name: Drop {{ _db.name }} database
+  mysql_db: name={{version_release}}_{{ _db.name }} state=absent
             login_host={{db_host}}
             login_user={{db_user}} login_password={{db_password}}
   tags: db, db-purge
 
-- name: Add {{project}} database
-  mysql_db: name={{version_release}}_{{project}} state=present
+- name: Add {{ _db.name }} database
+  mysql_db: name={{version_release}}_{{ _db.name }} state=present
             login_host={{db_host}}
             login_user={{db_user}} login_password={{db_password}}
   tags: db, db-init
 
-- name: Add {{project}} database user
-  mysql_user: name={{project}} password={{project}} priv=*.*:ALL
+- name: Add {{ _db.name }} database user
+  mysql_user: name={{ project }} password={{project}} priv=*.*:ALL
               state=present host=controller login_host={{db_host}}
               login_user={{db_user}} login_password={{db_password}}
   tags: db, db-init
