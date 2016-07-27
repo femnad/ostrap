@@ -33,12 +33,21 @@
         8774
       type: compute
 
+    nova_db:
+      sync_command:
+        db sync
+
+    nova_api_db:
+      sync_command:
+        api_db sync
+
+
   roles:
     - packages
+    - pip
     - clone
     - install
     - config
-    - { role: mysql, project: nova, sync_command: "db sync" }
-    - { role: mysql, project: nova_api, sync_command: "api_db sync",
-        manage_command: "nova-manage" }
+    - { role: mysql, db: "{{ nova_db }}" }
+    - { role: mysql, db: "{{ nova_api_db }}" }
     - service
