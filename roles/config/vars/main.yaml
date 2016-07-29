@@ -1,7 +1,7 @@
 ---
 _default_config:
   config_files:
-    []
+    ["{{ project }}.conf"]
   config_prefix:
     "etc"
   api_paste_files:

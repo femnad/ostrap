@@ -1,12 +1,54 @@
 ---
 - hosts: all
+  name: Install cinder
+
   vars_files:
     - environment.yaml
     - paths.yaml
+
+  vars:
+
+    project:
+      cinder
+
+    config:
+      config_prefix:
+        etc/cinder
+
+    service_v1:
+      description:
+        OpenStack Block Storage
+      endpoint:
+        v1/%\(tenant_id\)s
+      name:
+        cinder
+      port:
+        8776
+      type:
+        volume
+
+    service_v2:
+      description:
+        OpenStack Block Storage
+      endpoint:
+        v2/%\(tenant_id\)s
+      name:
+        cinderv2
+      port:
+        8776
+      type:
+        volumev2
+
+    db:
+      sync_command:
+        db sync
+
   roles:
-    - { role: clone, project: cinder, tags: clone }
-    - { role: install, project: cinder, tags: install }
-    - { role: config, project: cinder, config_files: [cinder], tags: config }
-    - { role: mysql, project: cinder, sync_command: "db sync", tags: database }
-    - { role: service, project: cinder, port: 8776, endpoint: "/v2/%\\(tenant_id\\)s",
-        type: volume, description: "OpenStack Block Storage", tags: service }
+    - clone
+    - install
+    - config
+    - mysql
+    - { role: service, service: "{{ service_v1 }}",
+        tags: servicev1 }
+    - { role: service, service: "{{ service_v2 }}",
+        tags: servicev2 }

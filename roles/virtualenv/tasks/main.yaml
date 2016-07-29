@@ -4,3 +4,10 @@
   args:
     creates: "{{  virtualenv_bin }}"
   tags: virtualenv, install
+
+- name: Update pip and setuptools
+  pip: name={{ item }} state=latest virtualenv={{ virtualenv_path }}
+  with_items:
+    - pip
+    - setuptools
+  tags: virtualenv, install

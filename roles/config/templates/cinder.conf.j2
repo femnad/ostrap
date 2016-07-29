@@ -1,13 +1,13 @@
 [database]
-connection = mysql://cinder:cinder@controller/{{cinder_database}}
-	
+connection = mysql+pymysql://cinder:cinder@controller/{{cinder_database}}
+
 [DEFAULT]
 rpc_backend = rabbit
 auth_strategy = keystone
 my_ip = {{controller_host}}
 debug = True
 log_dir = /var/log/cinder
- 
+
 [oslo_messaging_rabbit]
 rabbit_host = controller
 rabbit_userid = openstack
@@ -22,6 +22,6 @@ user_domain_id = default
 project_name = service
 username = cinder
 password = cinder
-	
+
 [oslo_concurrency]
 lock_path = /var/lock/cinder

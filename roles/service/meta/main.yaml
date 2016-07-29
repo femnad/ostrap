@@ -1,0 +1,4 @@
+---
+dependencies:
+  - { role: pip, pip_deps: "{{ _service_pip_reqs }}",
+      tags: service }

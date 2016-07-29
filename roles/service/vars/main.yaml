@@ -24,9 +24,15 @@ _default_service:
     ""
   endpoint:
     ""
+  name:
+    "{{ project }}"
   port:
     ""
   type:
     ""
 
 _service: "{{ _default_service | combine(service) }}"
+
+_service_pip_reqs:
+  python-openstackclient:
+    2.1.0

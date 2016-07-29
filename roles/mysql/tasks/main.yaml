@@ -6,8 +6,10 @@
     - 50-server.cnf
     - 50-client.cnf
   become: yes
-  tags: db, db-charset
+  when:
+    ansible_distribution == "Ubuntu" and ansible_distribution_version | version_compare('16.04', '>=')
   notify: restart mysql
+  tags: db, db-charset
 
 - name: Drop {{ _db.name }} database
   mysql_db: name={{version_release}}_{{ _db.name }} state=absent
