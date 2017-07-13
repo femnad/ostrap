@@ -1,11 +1,11 @@
 ---
 repo_base: git://git.openstack.org/openstack
 
-version_release: mitaka
+version_release: ocata
 version_branch: "stable/{{version_release}}"
 
 clone_path_prefix: "z/gl"
-virtualenv_prefix: "v/{{version_release}}"
+virtualenv_prefix: ".venv/{{version_release}}_{{ project }}"
 
 ceilometer_database: "{{ version_release}}_ceilometer"
 cinder_database: "{{ version_release}}_cinder"

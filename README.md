@@ -1,7 +1,7 @@
 What?
 =====
 
-Opinionated Ansible Playbooks and helper scripts for installing OpenStack Keystone, Glance, Nova, Neutron, Ceilometer kilo/stable versions in a virtualenv.
+Opinionated Ansible Playbooks and helper scripts for installing OpenStack Keystone, Glance, Nova, Neutron, Ceilometer stable (ocata at the moment) versions in a virtualenv.
 
 Why?
 ====
