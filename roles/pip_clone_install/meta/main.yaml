@@ -1,0 +1,4 @@
+---
+dependencies:
+  - clone
+  - { role: setuptools, install_requirements: yes }

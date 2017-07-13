@@ -45,3 +45,6 @@ admin_password: nimda
 
 rabbitmq_user: osrabbit
 rabbitmq_password: hare
+
+openstackclient_version:
+  3.11.0

@@ -1,0 +1,6 @@
+---
+repo:
+  url:
+    "{{ repo_base }}/{{ project }}"
+  version:
+    "{{ component_version | default(version_branch) }}"

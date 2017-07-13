@@ -1,5 +1,3 @@
 ---
 dependencies:
   - virtualenv
-  - { role: packages, deps: "{{ _dependencies }}",
-      tags: install }
