@@ -1,9 +1,9 @@
 ---
-openrc_dir: "{{ remote_user_home }}/w"
+openrc_dir: "{{ user_home }}/w"
 admin_openrc: "{{ openrc_dir }}/admin-{{ version_release }}-openrc.fish"
 
 openstackclient_bin: "{{ virtualenv_bin }}/openstack"
 
-virtualenv_path: "{{ remote_user_home}}/{{ virtualenv_prefix }}"
+virtualenv_path: "{{ user_home}}/{{ virtualenv_prefix }}"
 virtualenv_bin: "{{ virtualenv_path }}/bin"
 virtualenv_python: "{{ virtualenv_bin }}/python"

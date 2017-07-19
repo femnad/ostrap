@@ -4,5 +4,6 @@ dependencies:
       tags: db }
   - { role: hosts, tags: db }
   - { role: mysql_admin, tags: db }
-  - { role: pip, pip_deps: "{{ _pip_deps }}",
+  - { role: pip_packages,
+      pip_deps: "{{ _pip_deps }}",
       tags: db }

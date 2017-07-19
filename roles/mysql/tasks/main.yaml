@@ -8,7 +8,7 @@
   become: yes
   when:
     ansible_distribution == "Ubuntu" and ansible_distribution_version | version_compare('16.04', '>=')
-  notify: restart mysql
+  notify: restart-mysql
   tags: db, db-charset
 
 - name: Drop {{ _db.name }} database
