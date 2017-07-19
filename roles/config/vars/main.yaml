@@ -13,4 +13,4 @@ _config:
   "{{ _default_config | combine(config) }}"
 
 sample_config_dir:
-  "{{ base_clone_path }}/{{ project }}/{{ _config.config_prefix }}"
+  "{{ repo_clone_path }}/{{ project }}/{{ _config.config_prefix }}"

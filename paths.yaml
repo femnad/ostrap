@@ -1,8 +1,4 @@
 ---
-remote_user_home: "{{ ansible_env.HOME }}"
-
-base_clone_path: "{{ remote_user_home }}/{{clone_path_prefix}}/openstack/{{version_release}}"
-
 openrc_dir: "{{ remote_user_home }}/w"
 admin_openrc: "{{ openrc_dir }}/admin-{{ version_release }}-openrc.fish"
 

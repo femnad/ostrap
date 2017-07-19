@@ -22,9 +22,7 @@
         2016.4
 
   roles:
-    - pip
-    - clone
-    - install
+    - pip_clone_install
     - config
     - mysql
     - fernet
