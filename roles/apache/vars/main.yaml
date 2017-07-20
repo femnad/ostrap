@@ -1,0 +1,5 @@
+---
+_apache_deps:
+  apt:
+    - apache2
+    - libapache2-mod-wsgi-py3
