@@ -16,15 +16,17 @@
       api_paste_files: keystone-paste.ini
 
     pip_deps:
+      Babel:
+        2.3.4
       python-openstackclient:
-        2.3.0
-      pytz:
-        2016.4
+        3.11.0
 
   roles:
     - pip_clone_install
+    - pip_packages
     - config
     - mysql
     - fernet
+    - apache
     - bootstrap
     - envrc

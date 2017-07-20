@@ -13,7 +13,11 @@
   become: yes
   tags: fernet, fernet-key-dir
 
-- name: Initialize Fernet tokens
-  command: "{{virtualenv_bin}}/keystone-manage fernet_setup --keystone-user keystone --keystone-group keystone"
+- name: Initialize Fernet key repositories
+  command:
+    "{{ virtualenv_bin }}/keystone-manage {{ item }} --keystone-user keystone --keystone-group keystone"
+  with_items:
+    - fernet_setup
+    - credential_setup
   become: yes
   tags: fernet, fernet-key-setup

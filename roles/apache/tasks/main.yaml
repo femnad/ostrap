@@ -2,17 +2,20 @@
 - name: Set servername in apache2 configuration
   replace: dest=/etc/apache2/apache2.conf regexp='^ServerName.*' replace='ServerName controller'
   become: yes
-  tags: wsgi-servername
+  tags: wsgi,wsgi-servername
+
 - name: Add keystone virtual host file
   template: src=wsgi-keystone.conf.j2 dest=/etc/apache2/sites-available/wsgi-keystone.conf
   become: yes
-  tags: wsgi-virtualhost
+  tags: wsgi,wsgi-virtualhost
+
 - name: Enable Keystone service
   file: state=link src=/etc/apache2/sites-available/wsgi-keystone.conf dest=/etc/apache2/sites-enabled/wsgi-keystone.conf
   become: yes
-  tags: wsgi-sites
+  tags: wsgi,wsgi-sites
+
 - name: Restart apache
   service: name=apache2 state=restarted
   become: yes
   when: ansible_os_family == "Debian"
-  tags: wsgi-service
+  tags: wsgi,wsgi-service
