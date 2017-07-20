@@ -19,3 +19,19 @@
   become: yes
   when: ansible_os_family == "Debian"
   tags: wsgi,wsgi-service
+
+- name:
+    Enable virtualenv in service files
+  blockinfile:
+    block: |
+      activate_this = '{{ virtualenv_bin }}/activate_this.py'
+      exec(open(activate_this).read(), dict(__file__=activate_this))
+    insertbefore:
+      BOF
+    path:
+      "{{ item }}"
+  with_items:
+    - "{{ virtualenv_bin }}/keystone-wsgi-public"
+    - "{{ virtualenv_bin }}/keystone-wsgi-admin"
+  tags:
+    wsgi

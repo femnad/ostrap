@@ -3,3 +3,9 @@ _apache_deps:
   apt:
     - apache2
     - libapache2-mod-wsgi-py3
+
+_block:
+  virtualenv_bin:
+    "'{{ virtualenv_bin }}'"
+  activate_this:
+    "'/bin/activate_this.py'"
