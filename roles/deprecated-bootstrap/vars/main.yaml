@@ -1,6 +1,0 @@
----
-admin_bootstrap_environment:
-  OS_SERVICE_TOKEN:
-    "{{admin_token}}"
-  OS_SERVICE_ENDPOINT:
-    http://{{controller_host}}:35357/v2.0
