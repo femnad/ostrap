@@ -8,8 +8,12 @@
   become: yes
   when:
     ansible_distribution == "Ubuntu" and ansible_distribution_version | version_compare('16.04', '>=')
-  notify: restart-mysql
   tags: db, db-charset
+
+- name: Restart MySQL
+  service: name=mysql state=restarted
+  become: yes
+  tags: db
 
 - name: Drop {{ _db.name }} database
   mysql_db: name={{version_release}}_{{ _db.name }} state=absent

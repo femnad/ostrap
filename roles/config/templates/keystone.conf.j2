@@ -4,20 +4,7 @@ debug = True
 log_dir = /var/log/keystone
 
 [database]
-connection = mysql{% if version_release != "kilo" %}+pymysql{% endif %}://keystone:keystone@controller/{{keystone_database}}
-{% if version_release == "kilo" %}
-
-[memcache]
-servers = localhost:11211
-
-[revoke]
-driver = keystone.contrib.revoke.backends.sql.Revoke
-{% endif %}
+connection = mysql+pymysql://keystone:{{ db_passwords.keystone }}@{{ db_host }}/{{keystone_database}}
 
 [token]
-{% if version_release == "kilo" %}
-provider = keystone.token.providers.uuid.Provider
-driver = keystone.token.persistence.backends.memcache.Token
-{% else %}
 provider = fernet
-{% endif %}
