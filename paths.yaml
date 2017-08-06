@@ -2,6 +2,9 @@
 openrc_dir: "{{ user_home }}/w"
 admin_openrc: "{{ openrc_dir }}/admin-{{ version_release }}-openrc.fish"
 
+log_dir:
+  "{{ user_home }}/w/logs"
+
 openstackclient_bin: "{{ virtualenv_bin }}/openstack"
 
 virtualenv_path: "{{ user_home}}/{{ virtualenv_prefix }}"

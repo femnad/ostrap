@@ -28,12 +28,23 @@
   tags: db, db-init
 
 - name: Add {{ _db.name }} database user
-  mysql_user: name={{ project }} password={{project}} priv=*.*:ALL
-              state=present host=controller login_host={{db_host}}
-              login_user={{db_user}} login_password={{db_password}}
+  mysql_user:
+    name:
+      "{{ project }}"
+    password:
+      "{{ db_passwords[project] }}"
+    host:
+      '%'
+    priv:
+      '*.*:ALL'
+    login_host:
+      {{ db_host }}
+    login_user:
+      {{ db_user }}
+    login_password:
+      {{ db_password }}
   tags: db, db-init
 
 - name: Synchronize {{project}} database
   command: "{{virtualenv_bin}}/{{ _db.manage_command }} {{ _db.sync_command }}"
-  become: yes
   tags: db, db-sync

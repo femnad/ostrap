@@ -1,7 +1,6 @@
 [DEFAULT]
-admin_token = {{admin_token}}
 debug = True
-log_dir = /var/log/keystone
+log_dir = {{ log_dir }}/keystone
 
 [database]
 connection = mysql+pymysql://keystone:{{ db_passwords.keystone }}@{{ db_host }}/{{keystone_database}}

@@ -11,20 +11,6 @@
   tags:
     bootstrap,identity
 
-- name:
-    Set owner of Keystone log directory
-  file:
-    path:
-      /var/log/keystone
-    owner:
-      keystone
-    group:
-      keystone
-  become:
-    yes
-  tags:
-    bootstrap
-
 - name: Create keystone service
   environment: "{{admin_bootstrap_environment}}"
   command: "{{virtualenv_bin}}/openstack service create --name keystone --description 'OpenStack Identity' identity"

@@ -4,7 +4,11 @@
   tags: fernet, fernet-unix-user
 
 - name: Add keystone Unix user
-  user: name=keystone group=keystone
+  user:
+    name:
+      keystone
+    group:
+      keystone
   become: yes
   tags: fernet, fernet-unix-group
 

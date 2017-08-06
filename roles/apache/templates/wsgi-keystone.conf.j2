@@ -8,8 +8,8 @@ Listen 35357
     WSGIApplicationGroup %{GLOBAL}
     WSGIPassAuthorization On
     ErrorLogFormat "%{cu}t %M"
-    ErrorLog /var/log/apache2/keystone.log
-    CustomLog /var/log/apache2/keystone_access.log combined
+    ErrorLog {{ log_dir }}/apache2/keystone.log
+    CustomLog {{ log_dir }}/apache2/keystone_access.log combined
 
     <Directory {{virtualenv_bin}}>
         Require all granted
@@ -23,8 +23,8 @@ Listen 35357
     WSGIApplicationGroup %{GLOBAL}
     WSGIPassAuthorization On
     ErrorLogFormat "%{cu}t %M"
-    ErrorLog /var/log/apache2/keystone.log
-    CustomLog /var/log/apache2/keystone_access.log combined
+    ErrorLog {{ log_dir }}/apache2/keystone.log
+    CustomLog {{ log_dir }}/apache2/keystone_access.log combined
 
     <Directory {{virtualenv_bin}}>
         Require all granted

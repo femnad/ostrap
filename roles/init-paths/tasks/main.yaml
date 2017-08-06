@@ -1,0 +1,10 @@
+---
+- name:
+    Initialize log path
+  file:
+    path:
+      "{{ log_dir }}/{{ project }}"
+    state:
+      directory
+  tags:
+    init-paths
