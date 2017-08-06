@@ -3,9 +3,13 @@
     Initialize log path
   file:
     path:
-      "{{ log_dir }}/{{ project }}"
+      "{{ log_dir }}/{{ _self.base_name }}"
     state:
       directory
+    owner:
+      "{{ _self.owner | default(omit) }}"
+  when:
+    "{{ _self.base_name | default(false) }}"
   tags:
     init-paths
 

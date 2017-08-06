@@ -9,3 +9,9 @@ _block:
     "'{{ virtualenv_bin }}'"
   activate_this:
     "'/bin/activate_this.py'"
+
+paths:
+  owner:
+    keystone
+  base_name:
+    apache2

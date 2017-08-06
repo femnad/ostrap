@@ -1,4 +1,4 @@
 ---
 dependencies:
   - { role: packages, deps: "{{ _apache_deps }}" }
-  - { role: init-paths, project: apache2 }
+  - init-paths

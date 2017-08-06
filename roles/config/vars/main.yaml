@@ -14,3 +14,7 @@ _config:
 
 sample_config_dir:
   "{{ repo_clone_path }}/{{ project }}/{{ _config.config_prefix }}"
+
+paths:
+  base_name:
+    "{{ project }}"

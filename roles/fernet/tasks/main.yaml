@@ -13,9 +13,10 @@
   tags: fernet, fernet-unix-group
 
 - name: Initialize Fernet key repository
-  file: path=/etc/keystone/fernet-keys state=directory owner=keystone group=keystone mode=0700
-  become: yes
+  file: path={{ keystone_paths.fernet_keys }} state=directory owner=keystone group=keystone mode=0700
   tags: fernet, fernet-key-dir
+  become:
+    yes
 
 - name: Initialize Fernet key repositories
   command:
@@ -23,5 +24,6 @@
   with_items:
     - fernet_setup
     - credential_setup
-  become: yes
+  become:
+    yes
   tags: fernet, fernet-key-setup
