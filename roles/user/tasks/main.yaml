@@ -1,0 +1,24 @@
+---
+- name:
+    Check for {{ os_user }} user
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ virtualenv_bin }}/openstack user show --domain {{ os_domain }} {{ os_user }}"
+  register:
+    user_check
+  failed_when:
+    not user_check.rc in [0, 1]
+  tags:
+    user
+
+- name:
+    Create user {{ os_user }}
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ virtualenv_bin }}/openstack user create --domain {{ os_domain }} --password {{ os_password }} {{ os_user }}"
+  when:
+    user_check.rc == 1
+  tags:
+    user

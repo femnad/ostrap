@@ -1,0 +1,9 @@
+---
+- name:
+    Add role {{ os_role }} to project {{ os_project }} for user {{ os_user }}
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ virtualenv_bin }}/openstack role add --project {{ os_project }} --user {{ os_user }} {{ os_role }}"
+  tags:
+    add-user-to-role

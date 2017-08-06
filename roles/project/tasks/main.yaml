@@ -1,0 +1,23 @@
+- name:
+    Check for {{ os_project }} project
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ virtualenv_bin }}/openstack project show --domain {{ os_domain }} {{ os_project }}"
+  register:
+    service_check
+  failed_when:
+    not service_check.rc in [0, 1]
+  tags:
+    project
+
+- name:
+    Create project {{ os_project }}
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ virtualenv_bin }}/openstack project create --domain {{ os_domain }} --description '{{ os_description }}' {{ os_project }}"
+  when:
+    service_check.rc == 1
+  tags:
+    project

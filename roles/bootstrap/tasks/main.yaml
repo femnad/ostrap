@@ -11,52 +11,73 @@
   tags:
     bootstrap,identity
 
-- name: Create keystone service
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack service create --name keystone --description 'OpenStack Identity' identity"
-  tags: bootstrap, identity-service
+- include_role:
+    name:
+      project
+  vars:
+    os_environment:
+      "{{ admin_bootstrap_environment }}"
+    os_domain:
+      default
+    os_project:
+      service
+    os_description:
+      Service Project
+  tags:
+    bootstrap
 
-- name: Add keystone public endpoint
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack endpoint create --region RegionOne identity public http://{{controller_host}}:5000/v3"
-  tags: bootstrap, identity-endpoint-public
+- include_role:
+    name:
+      project
+  vars:
+    os_environment:
+      "{{ admin_bootstrap_environment }}"
+    os_domain:
+      default
+    os_project:
+      demo
+    os_description:
+      Demo Project
+  tags:
+    bootstrap
 
-- name: Add keystone internal endpoint
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack endpoint create --region RegionOne identity internal http://{{controller_host}}:5000/v3"
-  tags: bootstrap, identity-endpoint-internal
+- include_role:
+    name:
+      user
+  vars:
+    os_environment:
+      "{{ admin_bootstrap_environment }}"
+    os_domain:
+      default
+    os_user:
+      user
+    os_password:
+      "{{ users.user.password }}"
+  tags:
+    bootstrap, bootstrap-user
 
-- name: Add keystone admin endpoint
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack endpoint create --region RegionOne identity admin http://{{controller_host}}:35357/v3"
-  tags: bootstrap, identity-endpoint-admin
+- include_role:
+    name:
+      role
+  vars:
+    os_environment:
+      "{{ admin_bootstrap_environment }}"
+    os_role:
+      user
+  tags:
+    bootstrap, bootstrap-role
 
-- name: Create default domain
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{openstackclient_bin}} domain create --description 'Default Domain' default"
-  tags: bootstrap, service-domain
-
-- name: Create admin project
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack project create --domain default --description 'Admin Project' admin"
-  tags: bootstrap, admin-project
-
-- name: Create admin user
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack user create --domain default --password {{admin_password}} admin"
-  tags: bootstrap, admin-user
-
-- name: Create admin role
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack role create admin"
-  tags: bootstrap, admin-role
-
-- name: Add admin role to admin user
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack role add --project admin --user admin admin"
-  tags: bootstrap, admin-role
-
-- name: Create service project
-  environment: "{{admin_bootstrap_environment}}"
-  command: "{{virtualenv_bin}}/openstack project create --domain default --description 'Service Project' service"
-  tags: bootstrap, service-project
+- include_role:
+    name:
+      add_user_to_role
+  vars:
+    os_environment:
+      "{{ admin_bootstrap_environment }}"
+    os_role:
+      user
+    os_project:
+      demo
+    os_user:
+      user
+  tags:
+    bootstrap, bootstrap-user-role

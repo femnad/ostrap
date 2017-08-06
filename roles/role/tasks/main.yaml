@@ -1,0 +1,24 @@
+---
+- name:
+    Check for {{ os_role }} role
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ virtualenv_bin }}/openstack role show {{ os_role }}"
+  register:
+    role_check
+  failed_when:
+    not role_check.rc in [0, 1]
+  tags:
+    role
+
+- name:
+    Create role {{ os_role }}
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ virtualenv_bin }}/openstack role create {{ os_role }}"
+  when:
+    role_check.rc == 1
+  tags:
+    role
