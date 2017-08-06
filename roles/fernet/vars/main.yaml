@@ -1,0 +1,3 @@
+---
+_custom_paths:
+  "{{ keystone_paths.fernet_keys }}"

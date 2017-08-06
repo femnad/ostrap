@@ -1,0 +1,6 @@
+---
+paths:
+  {}
+
+_self:
+  "{{ _defaults | combine(paths) }}"

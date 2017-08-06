@@ -8,3 +8,15 @@
       directory
   tags:
     init-paths
+
+- name:
+    Initialize custom paths
+  file:
+    path:
+      "{{ _self.custom }}"
+    state:
+      directory
+  when:
+    _self.custom | default(false)
+  tags:
+    init-paths

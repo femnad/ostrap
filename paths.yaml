@@ -1,5 +1,5 @@
 ---
-openrc_dir: "{{ user_home }}/w"
+openrc_dir: "{{ user_home }}/y"
 admin_openrc: "{{ openrc_dir }}/admin-{{ version_release }}-openrc.fish"
 
 log_dir:
@@ -7,6 +7,13 @@ log_dir:
 
 openstackclient_bin: "{{ virtualenv_bin }}/openstack"
 
+user_etc:
+  "{{ user_home }}/w/etc"
+
 virtualenv_path: "{{ user_home}}/{{ virtualenv_prefix }}"
 virtualenv_bin: "{{ virtualenv_path }}/bin"
 virtualenv_python: "{{ virtualenv_bin }}/python"
+
+keystone_paths:
+  fernet_keys:
+    "{{ user_etc }}/keystone/fernet-keys"

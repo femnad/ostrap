@@ -7,3 +7,6 @@ connection = mysql+pymysql://keystone:{{ db_passwords.keystone }}@{{ db_host }}/
 
 [token]
 provider = fernet
+
+[fernet_tokens]
+key_repository = {{ keystone_paths.fernet_keys }}

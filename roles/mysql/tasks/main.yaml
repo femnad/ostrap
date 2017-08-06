@@ -38,11 +38,11 @@
     priv:
       '*.*:ALL'
     login_host:
-      {{ db_host }}
+      "{{ db_host }}"
     login_user:
-      {{ db_user }}
+      "{{ db_user }}"
     login_password:
-      {{ db_password }}
+      "{{ db_password }}"
   tags: db, db-init
 
 - name: Synchronize {{project}} database

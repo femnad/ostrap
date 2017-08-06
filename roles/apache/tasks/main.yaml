@@ -26,8 +26,8 @@
     block: |
       activate_this = '{{ virtualenv_bin }}/activate_this.py'
       exec(open(activate_this).read(), dict(__file__=activate_this))
-    insertbefore:
-      BOF
+    insertafter:
+      "#PBR Generated from 'wsgi_scripts'"
     path:
       "{{ item }}"
   with_items:
