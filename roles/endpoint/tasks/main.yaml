@@ -1,0 +1,11 @@
+---
+- name:
+    Create endpoints for {{ os_service }}
+  environment:
+    "{{ admin_environment }}"
+  command:
+    "{{ admin_bin }}/openstack endpoint create --region RegionOne {{ os_service }} {{ item.interface }} {{ item.url }}"
+  with_items:
+    "{{ endpoints }}"
+  tags:
+    endpoint

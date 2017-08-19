@@ -10,6 +10,8 @@ openstackclient_bin: "{{ virtualenv_bin }}/openstack"
 user_etc:
   "{{ user_home }}/w/etc"
 
+admin_virtualenv: "{{ virtualenv_base }}/keystone"
+admin_bin: "{{ admin_virtualenv }}/bin"
 virtualenv_path: "{{ user_home}}/{{ virtualenv_prefix }}"
 virtualenv_bin: "{{ virtualenv_path }}/bin"
 virtualenv_python: "{{ virtualenv_bin }}/python"

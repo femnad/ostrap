@@ -31,7 +31,7 @@
       project
   vars:
     os_environment:
-      "{{ admin_bootstrap_environment }}"
+      "{{ admin_environment }}"
     os_domain:
       default
     os_project:
@@ -46,7 +46,7 @@
       user
   vars:
     os_environment:
-      "{{ admin_bootstrap_environment }}"
+      "{{ admin_environment }}"
     os_domain:
       default
     os_user:
@@ -61,7 +61,7 @@
       role
   vars:
     os_environment:
-      "{{ admin_bootstrap_environment }}"
+      "{{ admin_environment }}"
     os_role:
       user
   tags:
@@ -72,7 +72,7 @@
       add_user_to_role
   vars:
     os_environment:
-      "{{ admin_bootstrap_environment }}"
+      "{{ admin_environment }}"
     os_role:
       user
     os_project:

@@ -1,50 +1,24 @@
 ---
-- name: Create {{project}} user
-  environment: "{{admin_environment}}"
-  command: "{{openstackclient_bin}} user create --domain default {{project}} --password {{project}}"
-  tags: service, service-user
-  when: _service.name != "cinderv2"
+- name:
+    Check for {{ os_service }} service
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ admin_bin }}/openstack service show {{ os_service }}"
+  register:
+    service_check
+  failed_when:
+    not service_check.rc in [0, 1]
+  tags:
+    service
 
-- name: Add admin role to {{project}} user
-  environment: "{{admin_environment}}"
-  command: "{{openstackclient_bin}} role add --project service --user {{project}} admin"
-  tags: service, service-admin-role
-
-- name: Create service for {{project}}
-  environment: "{{admin_environment}}"
-  command: "{{ openstackclient_bin }} service create --name {{ project }} \
-            --description '{{ _service.description }}' {{ _service.type }}"
-  tags: service, service-create
-
-- name: Create public endpoint for {{project}}
-  environment: "{{admin_environment}}"
-  command: "{{openstackclient_bin}} endpoint create --region {{region}} {{ _service.type }} \
-               public http://{{controller_host}}:{{ _service.port }}/{{ _service.endpoint }}"
-  tags: service, service-endpoint, service-endpoint-public
-
-- name: Create internal endpoint for {{project}}
-  environment: "{{admin_environment}}"
-  command: "{{openstackclient_bin}} endpoint create --region {{region}} {{ _service.type }} \
-               internal http://{{controller_host}}:{{ _service.port }}/{{ _service.endpoint }}"
-  tags: service, service-endpoint, service-endpoint-internal
-
-- name: Create admin endpoint for {{project}}
-  environment: "{{admin_environment}}"
-  command: "{{openstackclient_bin}} endpoint create --region {{region}} {{ _service.type }} \
-               admin http://{{controller_host}}:{{ _service.port }}/{{ _service.endpoint }}"
-  tags: service, service-endpoint, service-endpoint-admin
-
-- name: Create the heat stack user role
-  command: "{{openstackclient_bin}} role create heat_stack_user"
-  environment: "{{admin_environment}}"
-  when: project == "heat"
-  tags: service, heat-stack-user
-
-- name: Create heat domain
-  command: "{{virtualenv_bin}}/heat-keystone-setup-domain \
-            --stack-user-domain-name heat_user_domain \
-            --stack-domain-admin heat_domain_admin \
-            --stack-domain-admin-password heat"
-  environment: "{{admin_environment}}"
-  when: project == "heat"
-  tags: service, heat-domain
+- name:
+    Create service {{ os_service }}
+  environment:
+    "{{ os_environment }}"
+  command:
+    "{{ admin_virtualenv }}/bin/openstack service create --name {{ os_service }} --description '{{ description }}' {{ os_type }}"
+  when:
+    service_check.rc == 1
+  tags:
+    service

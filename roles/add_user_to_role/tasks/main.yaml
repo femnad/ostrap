@@ -4,6 +4,6 @@
   environment:
     "{{ os_environment }}"
   command:
-    "{{ virtualenv_bin }}/openstack role add --project {{ os_project }} --user {{ os_user }} {{ os_role }}"
+    "{{ admin_bin }}/openstack role add --project {{ os_project }} --user {{ os_user }} {{ os_role }}"
   tags:
     add-user-to-role

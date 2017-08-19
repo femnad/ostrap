@@ -1,0 +1,50 @@
+---
+- include_role:
+    name:
+      user
+  vars:
+    os_user:
+      "{{ service.name }}"
+    os_password:
+      "{{ users[service.name].password }}"
+    os_domain:
+      default
+  tags:
+    component, user
+
+- include_role:
+    name:
+      add_user_to_role
+  vars:
+    os_project:
+      service
+    os_user:
+      "{{ service.name }}"
+    os_role:
+      admin
+  tags:
+    component, role
+
+- include_role:
+    name:
+      service
+  vars:
+    os_service:
+      "{{ service.name }}"
+    os_type:
+      "{{ service.type }}"
+    description:
+      "{{ service.description }}"
+  tags:
+    component, service
+
+- include_role:
+    name:
+      endpoint
+  vars:
+    os_service:
+      "{{ service.name }}"
+    endpoints:
+      "{{ service.endpoints }}"
+  tags:
+    component, endpoint
