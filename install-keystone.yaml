@@ -68,7 +68,7 @@
     - { role: init-paths, paths: "{{ self_paths }}" }
     - mysql
     - fernet
-    - {role: systemd_user_service, systemd_service: "{{ public_wsgi }}" }
-    - {role: systemd_user_service, systemd_service: "{{ admin_wsgi }}" }
+    - {role: systemd_service, systemd_service: "{{ public_wsgi }}" }
+    - {role: systemd_service, systemd_service: "{{ admin_wsgi }}" }
     - bootstrap
     - envrc
