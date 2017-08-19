@@ -3,6 +3,8 @@ _default_db:
     "{{ project }}"
   manage_command:
     "{{ project }}-manage"
+  skip_db_ops:
+    false
   sync_command:
     db_sync
 

@@ -35,6 +35,18 @@
     "{{ _config.api_paste_files }}"
   tags: config, config-api
 
+- name:
+    Generate policy file
+  command:
+    "{{ virtualenv_bin }}/tox -egenpolicy"
+  args:
+    chdir:
+      "{{ source.path }}"
+  tags:
+    config, config-policy
+  when:
+    _config.generate_policy
+
 - name: Copy {{project}} policy configs
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes

@@ -21,12 +21,16 @@
   mysql_db: name={{version_release}}_{{ _db.name }} state=absent
             login_host={{db_host}}
             login_user={{db_user}} login_password={{db_password}}
+  when:
+    not _db.skip_db_ops
   tags: db, db-purge
 
 - name: Add {{ _db.name }} database
   mysql_db: name={{version_release}}_{{ _db.name }} state=present
             login_host={{db_host}}
             login_user={{db_user}} login_password={{db_password}}
+  when:
+    not _db.skip_db_ops
   tags: db, db-init
 
 - name: Add {{ _db.name }} database user

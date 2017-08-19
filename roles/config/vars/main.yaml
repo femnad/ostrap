@@ -6,6 +6,8 @@ _default_config:
     "etc"
   api_paste_files:
     [api-paste.ini]
+  generate_policy:
+    false
   policy_files:
     [policy.json]
 

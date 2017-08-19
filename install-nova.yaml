@@ -13,25 +13,65 @@
 
     deps:
       apt:
-        [libpq-dev, libvirt-bin, libvirt-dev, libxml2-dev, libxslt1-dev,
+        [libpq-dev, libvirt-daemon, libvirt-dev, libxml2-dev, libxslt1-dev,
          nbd-client, pkg-config, qemu-kvm]
 
     pip_deps:
       libvirt-python:
-        1.3.1
+        3.6.0
+      tox:
+        2.7.0
 
     config:
       config_files: [nova.conf]
       config_prefix: etc/nova
 
-    service:
+    nova_endpoint:
+      "{{ controller_host }}:8774/v2.1"
+    placement_endpoint:
+      "{{ controller_host }}:8778"
+
+    nova_service:
+      name:
+        nova
       description:
         OpenStack Compute
-      endpoint:
-        v2.1/%\(tenant_id\)s
-      port:
-        8774
-      type: compute
+      type:
+        compute
+      endpoints:
+        - interface:
+            public
+          url:
+            "{{ nova_endpoint }}"
+        - interface:
+            internal
+          url:
+            "{{ nova_endpoint }}"
+        - interface:
+            admin
+          url:
+            "{{ nova_endpoint }}"
+
+    placement_service:
+      name:
+        placement
+      description:
+        Placement API
+      type:
+        placement
+      endpoints:
+        - interface:
+            public
+          url:
+            "{{ placement_endpoint }}"
+        - interface:
+            internal
+          url:
+            "{{ placement_endpoint }}"
+        - interface:
+            admin
+          url:
+            "{{ placement_endpoint }}"
 
     nova_db:
       sync_command:
@@ -43,13 +83,47 @@
       sync_command:
         api_db sync
 
+    nova_cell_db:
+      name:
+        nova_cell0
+      sync_command:
+        cell_v2 map_cell0
+
+    nova_cell_db_cell1:
+      skip_db_ops:
+        true
+      sync_command:
+        cell_v2 create_cell --name=cell1
 
   roles:
     - packages
-    - pip
-    - clone
-    - install
+    - pip_clone_install
+    - pip_packages
+    - { role: component, service: "{{ nova_service }}" }
+    - { role: component, service: "{{ placement_service }}" }
     - config
     - { role: mysql, db: "{{ nova_db }}" }
     - { role: mysql, db: "{{ nova_api_db }}" }
-    - service
+    - { role: mysql, db: "{{ nova_cell_db }}" }
+    - { role: mysql, db: "{{ nova_cell_db_cell1 }}" }
+
+  post_tasks:
+    - include_role:
+        name:
+          systemd_service
+        vars:
+          systemd_service:
+            name:
+              "nova-{{ item }}"
+            description:
+              OpenStack Nova {{ item | capitalize }}
+            exec:
+              "{{ virtualenv_bin }}/nova-{{ item.exec }}"
+            user_service:
+              no
+      with_items:
+        - api
+        - consoleauth
+        - scheduler
+        - conductor
+        - novncproxy

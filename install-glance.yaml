@@ -67,4 +67,3 @@
     - config
     - mysql
     - component
-    - systemd_services

@@ -1,74 +1,47 @@
 [DEFAULT]
+transport_url = rabbit://{{ rabbitmq_user }}:{{ rabbitmq_password }}@{{ controller_host }}
 debug = True
-log_dir = /var/log/nova
-{% if version_release != "kilo" %}
-enabled_api = osapi_compute,metadata
-{% endif %}
-auth_strategy = keystone
-my_ip = {{controller_ip}}
+my_ip = {{ ansible_default_ipv4 }}
 use_neutron = True
 firewall_driver = nova.virt.firewall.NoopFirewallDriver
-compute_driver = {{compute_driver}}
-state_path = /var/lib/nova
-instance_usage_audit = True
-instance_usage_audit_period = hour
-notify_on_state_change = vm_and_task_state
-notification_driver = messagingv2
-{% if version_release != "kilo" %}
+
+[api]
+auth_strategy = keystone
 
 [api_database]
-connection = mysql+pymysql://nova:nova@controller/{{nova_api_database}}
-{% endif %}
+connection = mysql+pymysql://nova:{{ db_passwords.nova }}@{{ controller_host }}/{{ nova_api_database }}
 
 [database]
-connection = mysql{% if version_release != "kilo" %}+pymysql{% endif %}://nova:nova@controller/{{nova_database}}
+connection = mysql+pymysql://nova:{{ db_passwords.nova }}@{{ controller_host }}/{{ nova_database }}
 
 [keystone_authtoken]
-auth_uri = http://controller:5000
-auth_url = http://controller:35357
-memcached_servers = controller:11211
-{% if version_release == "kilo" %}
-auth_plugin = password
-project_domain_id = default
-user_domain_id = default
-{% else %}
+auth_uri = http://{{ controller_host }}:5000
+auth_url = http://{{ controller_host }}:35357
+memcached_servers = {{ controller_host }}:11211
 auth_type = password
 project_domain_name = default
 user_domain_name = default
-{% endif %}
 project_name = service
 username = nova
-password = nova
+password = {{ users.nova.password }}
 
 [vnc]
 enabled = True
 vncserver_listen = $my_ip
 vncserver_proxyclient_address = $my_ip
-novncproxy_base_url = http://controller:6080/vnc_auto.html
 
 [glance]
-api_servers = http://controller:9292
+api_servers = http://{{ controller_host }}:9292
 
 [oslo_concurrency]
 lock_path = /var/lib/nova/tmp
 
-[oslo_messaging_rabbit]
-rabbit_host = controller
-rabbit_userid = {{rabbitmq_user}}
-rabbit_password = {{rabbitmq_password}}
-
-[neutron]
-url = http://controller:9696
-auth_url = http://controller:35357
-auth_type = password
-project_domain_name = default
-user_domain_name = default
-region = RegionOne
-project_name = service
-username = neutron
-password = neutron
-service_metadata_proxy = True
-metadata_proxy_shared_secret = secr3t
-
-[cinder]
+[placement]
 os_region_name = RegionOne
+project_domain_name = Default
+project_name = service
+auth_type = password
+user_domain_name = Default
+auth_url = http://{{ controller_host }}:35357/v3
+username = placement
+password = {{ users.placement.password }}
