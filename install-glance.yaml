@@ -18,6 +18,10 @@
     endpoint:
       http://{{ controller_host }}:9292
 
+    pip_deps:
+      python-memcached:
+        1.58
+
     service:
       name:
         glance
@@ -39,8 +43,28 @@
           url:
             "{{ endpoint }}"
 
+    systemd_services:
+      - name:
+          glance-registry
+        description:
+          Glance Registry Service
+        exec:
+          "{{ virtualenv_bin }}/glance-registry"
+        user_service:
+          no
+      - name:
+          glance-api
+        description:
+          Glance API Service
+        exec:
+          "{{ virtualenv_bin }}/glance-api"
+        user_service:
+          no
+
   roles:
     - pip_clone_install
+    - pip_packages
     - config
     - mysql
     - component
+    - systemd_services

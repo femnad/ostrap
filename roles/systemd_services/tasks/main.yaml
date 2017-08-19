@@ -1,0 +1,11 @@
+---
+- include_role:
+    name:
+      systemd_service
+  vars:
+    systemd_service:
+      "{{ item }}"
+  with_items:
+    "{{ systemd_services }}"
+  tags:
+    systemd-services
