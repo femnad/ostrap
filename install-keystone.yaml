@@ -8,6 +8,38 @@
 
   vars:
 
+    public_wsgi:
+      name:
+        keystone-wsgi-public
+      description:
+        Keystone WSGI Public
+      exec:
+        "{{ virtualenv_bin }}/keystone-wsgi-public --host localhost --port 5000"
+      user_service:
+        no
+      unit_file:
+        service:
+          User:
+            keystone
+          Group:
+            keystone
+
+    admin_wsgi:
+      name:
+        keystone-wsgi-admin
+      description:
+        Keystone WSGI Admin
+      exec:
+        "{{ virtualenv_bin }}/keystone-wsgi-admin --host localhost --port 35357"
+      user_service:
+        no
+      unit_file:
+        service:
+          User:
+            keystone
+          Group:
+            keystone
+
     project:
       keystone
 
@@ -21,12 +53,22 @@
       python-openstackclient:
         3.11.0
 
+    self_paths:
+      base_name:
+        keystone
+      owner:
+        keystone
+      group:
+        keystone
+
   roles:
     - pip_clone_install
     - pip_packages
     - config
+    - { role: init-paths, paths: "{{ self_paths }}" }
     - mysql
     - fernet
-    - apache
+    - {role: systemd_user_service, systemd_service: "{{ public_wsgi }}" }
+    - {role: systemd_user_service, systemd_service: "{{ admin_wsgi }}" }
     - bootstrap
     - envrc

@@ -8,8 +8,12 @@
       directory
     owner:
       "{{ _self.owner | default(omit) }}"
+    group:
+      "{{ _self.group | default(omit) }}"
+  become:
+    "{{ (_self.owner is defined) or (_self.group is defined) }}"
   when:
-    "{{ _self.base_name | default(false) }}"
+    _self.base_name | default(false)
   tags:
     init-paths
 
