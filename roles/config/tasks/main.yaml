@@ -47,12 +47,27 @@
   when:
     _config.generate_policy
 
-- name: Copy {{project}} policy configs
+- name: Copy {{project}} policy configs (source and destination have identical names)
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
   become: yes
   with_items:
     "{{ _config.policy_files }}"
+  when:
+    _config.policy_files is not mapping
   tags: config, config-policy
+
+- name:
+    Copy {{project}} policy configs (source and destination have different names)
+  command:
+    cp {{ sample_config_dir }}/{{ item.key }} /etc/{{ project }}/{{ item.value }}
+  become:
+    yes
+  with_dict:
+    "{{ _config.policy_files }}"
+  when:
+    _config.policy_files is mapping
+  tags:
+    config, config-policy
 
 - name: Copy additional configuration files for {{project}}
   command: "cp {{sample_config_dir}}/{{item}} /etc/{{project}}/{{item}}"
