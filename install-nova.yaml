@@ -123,19 +123,21 @@
     - include_role:
         name:
           systemd_service
-        vars:
-          systemd_service:
-            name:
-              "nova-{{ item }}"
-            description:
-              OpenStack Nova {{ item | capitalize }}
-            exec:
-              "{{ virtualenv_bin }}/nova-{{ item.exec }}"
-            user_service:
-              no
+      vars:
+        systemd_service:
+          name:
+            "nova-{{ item }}"
+          description:
+            OpenStack Nova {{ item | capitalize }}
+          exec:
+            "{{ virtualenv_bin }}/nova-{{ item }}"
+          user_service:
+            no
       with_items:
         - api
         - consoleauth
         - scheduler
         - conductor
         - novncproxy
+      tags:
+        services
